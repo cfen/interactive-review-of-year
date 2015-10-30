@@ -1,0 +1,156 @@
+/**
+ * Project: Project name 
+ * File:    Main SCSS
+ */
+@import 'modules/_fonts';
+@import 'modules/_typography';
+@import 'modules/_palette';
+@import 'modules/_grid-system';
+@import 'modules/_breakpoints';
+
+// Optional side margins
+@import 'modules/_mq';
+@import 'modules/_side-margins';
+
+//Component css
+@import 'pageHeader';
+@import 'filters';
+
+
+//palette
+$neutral-1: map-get($pasteup-palette, 'neutral-1');
+$neutral-2: map-get($pasteup-palette, 'neutral-2');
+$neutral-3: map-get($pasteup-palette, 'neutral-3');
+$neutral-4: map-get($pasteup-palette, 'neutral-4');
+$neutral-5: map-get($pasteup-palette, 'neutral-5');
+$neutral-6: map-get($pasteup-palette, 'neutral-6');
+$neutral-7: map-get($pasteup-palette, 'neutral-7');
+$neutral-8: map-get($pasteup-palette, 'neutral-8');
+$news-main-1: map-get($pasteup-palette, 'news-main-1');
+$news-main-2: map-get($pasteup-palette, 'news-main-2');
+$news-support-1: map-get($pasteup-palette, 'news-support-1');
+$guardian-brand: map-get($pasteup-palette, 'guardian-brand');
+$guardian-brand-light: map-get($pasteup-palette, 'guardian-brand-light');
+$guardian-brand-dark: map-get($pasteup-palette, 'guardian-brand-dark');
+$maps-support-3: map-get($pasteup-palette, 'maps-support-3');
+
+// Setup page
+body {
+    margin: 0;
+    padding: 0;
+
+}
+
+//general
+a, a:hover, a:active {
+    color: #005689;
+}
+
+// Remove <figure> margin
+.interactive {
+    margin: 0;
+}
+
+// Note: Access images using absolute '/imgs/' paths
+.gv-wrapper {
+    margin: 0 auto;
+    
+    
+    // Breakpoints
+    @include mq(tablet) {
+        max-width: gs-span(9) + $gs-gutter*2;
+        
+    }
+
+    @include mq(desktop) {
+        max-width: gs-span(12) + $gs-gutter*2;
+        
+    }
+
+    @include mq(leftCol) {
+        padding-left: 0;
+        padding-right: 0;
+        max-width: gs-span(14) + $gs-gutter*2;
+    }
+    @include mq(wide) {
+        width: gs-span(16) + $gs-gutter*2;
+        max-width: none;
+    }
+}
+
+.gv-header {
+    padding: 0 auto;
+    margin: 0;
+}
+
+
+
+.gv-table{
+    margin:$gs-baseline ($gs-gutter/2);
+    max-width: gs-span(8);
+    font-size: 12px;
+    border-collapse: collapse; 
+
+
+    @include mq(tablet) {
+        margin:$gs-baseline $gs-gutter $gs-baseline $gs-gutter;
+        font-size: 14px;
+    }
+
+    @include mq(desktop) {
+        // font-size: 20px;
+    }
+
+    @include mq(leftCol) {
+        margin: gs-height(1) auto $gs-baseline (gs-span(2)+$gs-gutter);
+    }
+    @include mq(wide) {
+         margin: gs-height(1) auto $gs-baseline (gs-span(3) + $gs-gutter);
+        
+    }
+        
+        .entry-head{
+            font-family: "Guardian Egyptian Web", Sans;
+            font-weight:200;
+            line-height:0.9em;
+            cursor:pointer;
+        }
+
+        .entry-subhead{
+            color:$neutral-3;
+            font-family: "Guardian Egyptian Web", Sans;
+            font-weight:200;
+            font-size: 1.2em;
+            line-height:0.9em;
+        }
+
+        .entry-detail{
+            color:$neutral-2;
+            font-family: "Guardian Text Sans Web", Sans;
+            font-weight:400;
+            font-size: 1em;
+            line-height:1.6em;
+            padding-bottom: $gs-baseline;
+            @include mq(tablet) {
+                    font-family: "Guardian Egyptian Web", Sans;
+                    padding-bottom: gs-height(1);
+                }
+        }
+
+        .entry-seperator{
+            height: $gs-baseline;
+        }
+
+        .gv-hide-row{
+            display:none;
+        }
+        .gv-show-row{
+            display:block;
+        }
+}
+
+
+
+
+
+ 

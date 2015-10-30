@@ -1,0 +1,32 @@
+<table class="gv-table">
+	<!-- <thead>
+		<tr>
+			<th>Title</th>
+			<th>Release</th>
+		</tr>
+	</thead> -->
+	
+	<tbody>
+
+		{{#each entries:count}}
+			<tr class="entry-main-row" id="row_{{ count+1 }}">
+				<td class="entry-head" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em"> {{ count+1 }}.{{ Heading }} </td>
+			</tr>
+			<tr>
+				<td class="entry-subhead"> {{ Subheading }} </td>
+			</tr>
+			<tr class="entry-detail-row gv-hide-row" id="EntryDetail_{{ count }}">
+				<td class="entry-detail">
+
+					{{ Description }}
+				
+				</td>	
+			</tr>	
+			<tr>
+				<td class="entry-seperator"></td>
+			</tr>	
+		{{/each}}
+
+	</tbody>
+	
+</table>
