@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	//test params ?key=1iTB3A14lnsKiSnCbaJTsFwS_sPEFXvwk5RoLMaRUKbs&colour=culture
+	//test params ?key=1iTB3A14lnsKiSnCbaJTsFwS_sPEFXvwk5RoLMaRUKbs&colour=culture&page-title=%22TV%20Review%20of%20the%20Year%202015%22
 
 	/**
 	* Boot the app.
@@ -64,24 +64,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 	var getJSON = __webpack_require__(2);
 	var _ = __webpack_require__(3)
+	var share  = __webpack_require__(4);
+	var scrollTo  = __webpack_require__(5);
 
+	console.log(scrollTo)
 	 
 	function boot(el) {
 		var app = new Ractive({
 			el: el,
-			template: __webpack_require__(4),
+			template: __webpack_require__(6),
 			data: {
-				entries: __webpack_require__(5)
+				entries: __webpack_require__(7)
 			},
 			components: {
-				pageHeader: __webpack_require__(6),
-				filters: __webpack_require__(8),
-				subView: __webpack_require__(10)
+				pageHeader: __webpack_require__(8),
+				filters: __webpack_require__(10),
+				filterFeature: __webpack_require__(12),
+				subView: __webpack_require__(14)
 			},
 			updateView: function (data) {
 				dataset = modelData(data.sheets.Sheet1);
 				app.set('entries', dataset);
-				setColorScheme();
+				buildView();
 				addListeners();
 			}
 		});
@@ -94,7 +98,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		var previousColor = baseColor;
 		var baseLum = 0.175;
 		var typeSizeRange;
-
+		var pageTitle = getQueryVariable("page-title");
+		var prevDetailRef; // used to store reference to open detail in function setNewRowView
 
 			getJSON(url, app.updateView);
 
@@ -126,6 +131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (v == "culture"){ return "#951c55"}
 					if (v == "comment"){ return "#c05303"}
 					if (v == "multimedia"){ return "#484848"}
+					if (v == "sport"){ return "#1C4A00"}
 
 					else {return "#194377"};
 
@@ -134,6 +140,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		function setColorScheme(){
 					var filterArea = document.getElementById("filterArea").style.background = baseColor;
 					var filterAreaBG = document.getElementById("filterAreaBG").style.background = baseColor;
+					var featureAreaBG  = document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
+					var featureArea  = document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 					
 
 					var filterButtonIcon = document.getElementsByClassName("dig-filters__filter__link__circle");
@@ -145,6 +153,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}
 
+		function addPageHeader(){
+			document.getElementById("gvPageHead").innerHTML = decodeURIComponent(pageTitle);
+		}
+
 		function modelData(rawData){	
 						var topPosTemp = 0;
 
@@ -154,6 +166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 								item.bandInfo = getBandInfo(item.Rank, rawData.length);
 								item.numSize = (item.typeSize * 0.75);
 								item.imgPath = item["Thumb image URL 500x500px"];
+								item.socialTwitter = encodeURIComponent("Guardian review "+item.Rank+" "+item.Heading)
 								item.detailImgPath = item["Main Image URL landscape 900 x 506px"];
 								topPosTemp += item.lineH;
 								item.positioner = topPosTemp;
@@ -165,6 +178,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}
 
+		function buildView(){
+			setColorScheme();
+			addPageHeader();
+		}
 
 		function getBandInfo(a, max){
 			var n = Math.ceil((a/10));
@@ -211,9 +228,50 @@ return /******/ (function(modules) { // webpackBootstrap
 		function addListeners(){
 			var clickCell = document.getElementsByClassName("entry-main-row");
 			 _.each(clickCell, function(item) {
-		        	document.getElementById(item.id).addEventListener("click", function() {  rowClick(this.id); });
+		        	document.getElementById(item.id).addEventListener("click", function(evt) {  
+		        		rowClick(this.id); 
+		        		evt.preventDefault();
+			            scrollTo(document.getElementById(this.id));
+
+		        	});
 		       });
 
+			addSocialListeners(); 
+			addNavListeners();
+
+		}
+
+		function addNavListeners(){
+
+			var filterEl = document.getElementsByClassName('js-filter')
+			console.log(filterEl)
+			 _.each(filterEl, function(item) {
+		        	item.addEventListener('click', function(evt) {
+		        		var sectionId = item.getAttribute('data-section');
+			            evt.preventDefault();
+			            scrollTo(document.getElementById("row_" + sectionId));
+			        });
+		       });
+
+			
+
+		}
+
+		function addSocialListeners(){
+			var socialDetail = document.getElementsByClassName("js-share-detail");
+
+			_.each(socialDetail, function(item) {
+		        	document.getElementById(item.id).addEventListener("click", function() {  socialDetailClick(this); });
+		       }); 
+		}
+
+		function socialDetailClick(shareEl) { 
+			 var a = shareEl.id;
+			 var network = shareEl.getAttribute('data-network');
+
+		     var b = a.split("_");
+		     n = b[1];
+		     share(network, pageTitle, dataset[n]);
 		}
 
 		function rowClick(a) { 
@@ -223,10 +281,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		     setNewRowView(n-1);
 		}
 
-	var prevRef;
-
 		function setNewRowView(n){
-			var prevRow = document.getElementById("EntryDetail_"+prevRef);
+			var prevRow = document.getElementById("EntryDetail_"+prevDetailRef);
 			
 			if(prevRow){
 				removeClass(prevRow, 'gv-show-row')
@@ -238,7 +294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			removeClass(targetRow, 'gv-hide-row')
 			addClass(targetRow, 'gv-show-row')
 			 
-			prevRef = n;
+			prevDetailRef = n;
 		
 		}
 
@@ -18503,10 +18559,94 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<div class=\"l-side-margins\">\n\t<pageHeader/>\n    <filters/>\n\n\n<div class=\"gv-wrapper\">\n        \n    \t\t<subView />\n    \n    </div>\n</div>"
+	
+	var shareURL = encodeURIComponent('http://gu.com/p/4bft3'); // TODO: short url
+	var hashTag = '#100ToryDays';
+
+	const twitterBaseUrl = 'https://twitter.com/intent/tweet?text=';
+	const facebookBaseUrl = 'https://www.facebook.com/sharer/sharer.php?ref=responsive&u=';
+	const googleBaseUrl = 'https://plus.google.com/share?url=';
+
+	function share(network, pageTitle, data) {
+
+			var numStr = data.Rank;
+			var headStr = data.Heading
+
+		    var twitterMessage = "@guardian "+decodeURIComponent(pageTitle)+" - number "+numStr+" "+headStr;
+		    var shareWindow;
+
+		    if (network === 'twitter') {
+		        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL;
+		    } else if (network === 'facebook') {
+		        shareWindow = facebookBaseUrl + shareURL;
+		    } else if (network === 'email') {
+		        shareWindow = 'mailto:?subject=' + encodeURIComponent(pageTitle) + '&body=' + shareURL;
+		    } else if (network === 'google') {
+		        shareWindow = googleBaseUrl + shareURL;
+		    }
+		
+
+	    window.open(shareWindow, network + 'share', 'width=640,height=320');
+
+
+
+	    
+	}
+
+
+
+
+	module.exports = share;
+
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	
+	const interval = 15, total = 300;
+
+	function getOffset(el) {
+	    return el ? el.offsetTop + getOffset(el.offsetParent) : 0;
+	}
+
+	var animationFrame = window.requestAnimationFrame;
+	var vendors = ['ms', 'moz', 'webkit', 'o'];
+	for (var x = 0; x < vendors.length && !animationFrame; ++x) {
+	    animationFrame = window[vendors[x]+'RequestAnimationFrame'];
+	}
+
+	animationFrame = animationFrame || function (cb) { setTimeout(cb, 13); };
+
+	function scrollTo(el) {
+	    var start = window.pageYOffset;
+	    var end = getOffset(el);
+	    var distance = end - start;
+	    var elapsed = 0;
+
+	    animationFrame(function scrollHandler() {
+	        var t = elapsed / total;
+	        window.scrollTo(0, Math.floor(start + distance * t * (2 - t)));
+	        if (elapsed < total) {
+	            elapsed += interval;
+	            animationFrame(scrollHandler);
+	        }
+	    });
+	};
+
+
+
+	module.exports = scrollTo;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = "\n<div class=\"l-side-margins\">\n\t<pageHeader/>\n\n    <filterFeature/>\n    \n\t<filters/>\n\n\n<div class=\"gv-wrapper\">\n        \n    \t\t<subView />\n    \n    </div>\n</div>"
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -18519,29 +18659,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			"release": 1998
 		}
 	];
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Ractive = __webpack_require__(1);
-
-	function onrender() {
-		console.log('Rendering pageHeader');
-	}
-
-	module.exports = Ractive.extend({
-	  		isolated: false,
-		  	onrender: onrender,
-	  		template: __webpack_require__(7)
-	});
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"dig-slice\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <a class=\"dig-tag\" href=\"http://www.theguardian.com/politics\">Television</a>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <h1 class=\"dig-title\">TV review of the year</h1>\n        </div>\n    </div>\n</div>\n\n<div class=\"dig-slice dig-slice--standfirst\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <p class=\"dig-date\">\n                Friday 30 October 2015 12:30 BST\n            </p>\n            <p class=\"dig-share-container\">\n                <button class=\"dig-share js-share\" data-network=\"facebook\"></button>\n                <button class=\"dig-share js-share\" data-network=\"twitter\"></button>\n                <button class=\"dig-share js-share\" data-network=\"email\"></button>\n            </p>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <p class=\"dig-standfirst\">\n                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo\n                <a href=\"http://www.theguardian.com/politics/2015/jul/31/david-cameron-we-havent-wasted-a-day-since-election\">\n                    guided only by the 'good book'\n                </a> \n                <b><a href=\"http://www.theguardian.com/profile/andrewsparrow\">Andrew Sparrow</a></b>\n                neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt\n            </p>\n            <ul class=\"dig-standfirst__links\">\n                <li><a href=\"http://www.theguardian.com/politics/2015/aug/14/david-cameron-first-100-days-what-has-conservative-government-actually-done\">Analysis: 2015 the best year of television ever</a></li>\n            </ul>\n        </div>\n    </div>\n</div>"
 
 /***/ },
 /* 8 */
@@ -18564,7 +18681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"A\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> \n            \t\t\t<span class=\"dig-filters__filter__link__text\">Numbers 11-20</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"B\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> \n            \t\t\t<span class=\"dig-filters__filter__link__text\">21-30</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"C\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">31-40</span> </a>\n            \t\t</li>\n\n            \t\t<li class=\"dig-filters__filter\"> <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"D\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">41-50</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"E\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">51-60</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"F\"> \n            \t\t\t\t<span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">61-70</span> </a>\n            \t\t</li>\n            \t</ul>\n        </div>\n    </div>\n</div>"
+	module.exports = "<div class=\"dig-slice\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <a class=\"dig-tag\" href=\"http://www.theguardian.com/politics\">Television</a>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <h1 class=\"dig-title\" id=\"gvPageHead\"></h1>\n        </div>\n    </div>\n</div>\n\n<div class=\"dig-slice dig-slice--standfirst\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <p class=\"dig-date\">\n                Friday 30 October 2015 12:30 BST\n            </p>\n            <p class=\"dig-share-container\">\n                <button class=\"dig-share js-share\" data-network=\"facebook\"></button>\n                <button class=\"dig-share js-share\" data-network=\"twitter\"></button>\n                <button class=\"dig-share js-share\" data-network=\"email\"></button>\n            </p>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <p class=\"dig-standfirst\">\n                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo\n                <a href=\"http://www.theguardian.com/politics/2015/jul/31/david-cameron-we-havent-wasted-a-day-since-election\">\n                    guided only by the 'good book'\n                </a> \n                <b><a href=\"http://www.theguardian.com/profile/andrewsparrow\">Andrew Sparrow</a></b>\n                neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt\n            </p>\n            <ul class=\"dig-standfirst__links\">\n                <li><a href=\"http://www.theguardian.com/politics/2015/aug/14/david-cameron-first-100-days-what-has-conservative-government-actually-done\">Analysis: 2015 the best year of television ever</a></li>\n            </ul>\n        </div>\n    </div>\n</div>"
 
 /***/ },
 /* 10 */
@@ -18573,7 +18690,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 
 	function onrender() {
-		console.log('Rendering subview');
+		console.log('Rendering pageHeader');
 	}
 
 	module.exports = Ractive.extend({
@@ -18587,7 +18704,53 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\n\t\t{{#each entries:count}}\n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<td class=\"entry-head\" style=\"color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em\"> {{ count+1 }}.{{ Heading }} </td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-subhead\"> {{ Subheading }} </td>\n\t\t\t</tr>\n\t\t\t<tr class=\"entry-detail-row gv-hide-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t<div class=\"gv-image-holder\" style=\"height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain; \">\n\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t{{ Description }}\n\t\t\t\t\n\t\t\t\t</td>\t\n\t\t\t</tr>\t\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-seperator\"></td>\n\t\t\t</tr>\t\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
+	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> \n            \t\t\t<span class=\"dig-filters__filter__link__text\">1 to 10</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"11\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> \n            \t\t\t<span class=\"dig-filters__filter__link__text\">11-20</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"21\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">21-30</span> </a>\n            \t\t</li>\n\n            \t\t<li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"31\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">31-40</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"41\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">41-50</span> </a>\n            \t\t</li>\n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"51\"> \n            \t\t\t\t<span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">51-60</span> </a>\n            \t\t</li>\n                    <li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"61\"> \n                            <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">61-70</span> </a>\n                    </li>\n                    <li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"71\"> <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">71-80</span> </a>\n                    </li>\n                    <li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"81\"> \n                            <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">81-90</span> </a>\n                    </li>\n                    <li class=\"dig-filters__filter\"> \n                        <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"91\"> \n                            <span class=\"dig-filters__filter__link__circle\"> <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> </span> <span class=\"dig-filters__filter__link__text\">91-100</span> </a>\n                    </li>\n            \t</ul>\n        </div>\n    </div>\n</div>\n\n "
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Ractive = __webpack_require__(1);
+
+	function onrender() {
+		console.log('Rendering pageFilterfeature');
+	}
+
+	module.exports = Ractive.extend({
+	  		isolated: false,
+		  	onrender: onrender,
+	  		template: __webpack_require__(13)
+	});
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\">&nbsp;</h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                Interesting visual here\n            </div>    \n    </div>\n</div>\n</div>    "
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Ractive = __webpack_require__(1);
+
+	function onrender() {
+		console.log('Rendering subview');
+	}
+
+	module.exports = Ractive.extend({
+	  		isolated: false,
+		  	onrender: onrender,
+	  		template: __webpack_require__(15)
+	});
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\n\t\t{{#each entries:count}}\n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<td class=\"entry-head\"><a href=\"#row_{{ count+1 }}\" style=\"color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em\">{{ count+1 }}.{{ Heading }} </a> </td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-subhead\"> {{ Subheading }} </td>\n\t\t\t</tr>\n\t\t\t<tr class=\"entry-detail-row gv-hide-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t<div class=\"gv-image-holder\" style=\"height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain;\">\n\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t\t<div class=\"gv-desc-holder\">\n\t\t\t\t\t\t\t{{ Description }}\n\n\t\t\t\t\t\t\t <p class=\"dig-share-container\">\n                <button class=\"dig-share js-share-detail\" data-network=\"facebook\" id=\"fb_{{ count }}\"></button>\n                <button class=\"dig-share js-share-detail\" data-network=\"twitter\"  id=\"tw_{{ count }}\"></button>\n                <button class=\"dig-share js-share-detail\" data-network=\"email\"  id=\"em_{{ count }}\"></button>\n            </p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t</td>\t\n\t\t\t</tr>\t\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-seperator\"></td>\n\t\t\t</tr>\t\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
 
 /***/ }
 /******/ ])

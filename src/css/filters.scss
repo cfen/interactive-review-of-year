@@ -13,9 +13,11 @@ $day-spacing: 20px;
 }
 
 .dig-filters__filter {
+
     margin-bottom: 10px;
     padding-right: 7px;
     box-sizing: border-box;
+    font-family: "Guardian Egyptian Web", serif;
 
     @include mq(tablet) {
         margin-bottom: 15px;
@@ -25,15 +27,15 @@ $day-spacing: 20px;
     }
 
     @include mq(desktop) {
-        width: 25%;
-        height: 48px;
+        width: $gs-column-width;
+        height: $gs-baseline;
     }
 
 }
 
 .dig-filters__filter__link {
     display: block;
-    line-height: 20px;
+    line-height: 1em;
     opacity: 0.8;
     transition: opacity 0.1s ease-out;
 
@@ -52,7 +54,11 @@ $day-spacing: 20px;
 .dig-filters__filter__link__text {
     display: inline-block;
     vertical-align: middle;
-    width: calc(100% - 38px);
+    width: calc(30% - 38px);
+
+    @include mq(desktop){
+        width: 100%;
+    }
 }
 
 .dig-filters__filter__link__circle {
@@ -64,6 +70,9 @@ $day-spacing: 20px;
     color: #94bfdd;
     background-color: white;
     margin-right: 4px;
+    @include mq(desktop){
+        display:none;
+    }
 }
 
 .dig-days__day {
@@ -180,10 +189,17 @@ $day-spacing: 20px;
 
 
 .dig-section-title {
-    @include fs-header(1);
+
+    font-family:"Guardian Egyptian Web", serif;
+    font-weight: 900;
+    font-size: 1em; 
+    line-height: 1em;
     padding-right: 90px;
+    margin:0;
+    padding-bottom:$gs-baseline;
     @include mq(leftCol) {
         padding-right: 0;
+        padding-bottom: 0;
     }
 
     .dig-slice--filters & {
@@ -216,15 +232,7 @@ $day-spacing: 20px;
     }
 }
 
-.dig-sections {
-    counter-reset: day;
-
-    .dig-slice__inner {
-        border-bottom: 1px solid #333;
-        padding-bottom: 0;
-    }
-
-    .dig-slice:last-child .dig-slice__inner {
-        border-bottom: 0;
-    }
+.dig-slice-feature{
+    height: gs-height(4);
+    
 }

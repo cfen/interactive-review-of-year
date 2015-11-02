@@ -1,4 +1,4 @@
-//test params ?key=1iTB3A14lnsKiSnCbaJTsFwS_sPEFXvwk5RoLMaRUKbs&colour=culture
+//test params ?key=1iTB3A14lnsKiSnCbaJTsFwS_sPEFXvwk5RoLMaRUKbs&colour=culture&page-title=%22TV%20Review%20of%20the%20Year%202015%22
 
 /**
 * Boot the app.
@@ -8,7 +8,10 @@
 var Ractive = require('ractive');
 var getJSON = require('./js/utils/getjson');
 var _ = require('underscore')
+var share  = require('./js/components/share');
+var scrollTo  = require('./js/utils/scroll-to');
 
+console.log(scrollTo)
  
 function boot(el) {
 	var app = new Ractive({
@@ -20,12 +23,13 @@ function boot(el) {
 		components: {
 			pageHeader: require('./js/pageHeader'),
 			filters: require('./js/filters'),
+			filterFeature: require('./js/filterFeature'),
 			subView: require('./js/subView')
 		},
 		updateView: function (data) {
 			dataset = modelData(data.sheets.Sheet1);
 			app.set('entries', dataset);
-			setColorScheme();
+			buildView();
 			addListeners();
 		}
 	});
@@ -38,7 +42,8 @@ function boot(el) {
 	var previousColor = baseColor;
 	var baseLum = 0.175;
 	var typeSizeRange;
-
+	var pageTitle = getQueryVariable("page-title");
+	var prevDetailRef; // used to store reference to open detail in function setNewRowView
 
 		getJSON(url, app.updateView);
 
@@ -70,6 +75,7 @@ function boot(el) {
 				if (v == "culture"){ return "#951c55"}
 				if (v == "comment"){ return "#c05303"}
 				if (v == "multimedia"){ return "#484848"}
+				if (v == "sport"){ return "#1C4A00"}
 
 				else {return "#194377"};
 
@@ -78,6 +84,8 @@ function boot(el) {
 	function setColorScheme(){
 				var filterArea = document.getElementById("filterArea").style.background = baseColor;
 				var filterAreaBG = document.getElementById("filterAreaBG").style.background = baseColor;
+				var featureAreaBG  = document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
+				var featureArea  = document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 				
 
 				var filterButtonIcon = document.getElementsByClassName("dig-filters__filter__link__circle");
@@ -89,6 +97,10 @@ function boot(el) {
 
 	}
 
+	function addPageHeader(){
+		document.getElementById("gvPageHead").innerHTML = decodeURIComponent(pageTitle);
+	}
+
 	function modelData(rawData){	
 					var topPosTemp = 0;
 
@@ -98,6 +110,7 @@ function boot(el) {
 							item.bandInfo = getBandInfo(item.Rank, rawData.length);
 							item.numSize = (item.typeSize * 0.75);
 							item.imgPath = item["Thumb image URL 500x500px"];
+							item.socialTwitter = encodeURIComponent("Guardian review "+item.Rank+" "+item.Heading)
 							item.detailImgPath = item["Main Image URL landscape 900 x 506px"];
 							topPosTemp += item.lineH;
 							item.positioner = topPosTemp;
@@ -109,6 +122,10 @@ function boot(el) {
 
 	}
 
+	function buildView(){
+		setColorScheme();
+		addPageHeader();
+	}
 
 	function getBandInfo(a, max){
 		var n = Math.ceil((a/10));
@@ -155,9 +172,50 @@ function boot(el) {
 	function addListeners(){
 		var clickCell = document.getElementsByClassName("entry-main-row");
 		 _.each(clickCell, function(item) {
-	        	document.getElementById(item.id).addEventListener("click", function() {  rowClick(this.id); });
+	        	document.getElementById(item.id).addEventListener("click", function(evt) {  
+	        		rowClick(this.id); 
+	        		evt.preventDefault();
+		            scrollTo(document.getElementById(this.id));
+
+	        	});
 	       });
 
+		addSocialListeners(); 
+		addNavListeners();
+
+	}
+
+	function addNavListeners(){
+
+		var filterEl = document.getElementsByClassName('js-filter')
+		console.log(filterEl)
+		 _.each(filterEl, function(item) {
+	        	item.addEventListener('click', function(evt) {
+	        		var sectionId = item.getAttribute('data-section');
+		            evt.preventDefault();
+		            scrollTo(document.getElementById("row_" + sectionId));
+		        });
+	       });
+
+		
+
+	}
+
+	function addSocialListeners(){
+		var socialDetail = document.getElementsByClassName("js-share-detail");
+
+		_.each(socialDetail, function(item) {
+	        	document.getElementById(item.id).addEventListener("click", function() {  socialDetailClick(this); });
+	       }); 
+	}
+
+	function socialDetailClick(shareEl) { 
+		 var a = shareEl.id;
+		 var network = shareEl.getAttribute('data-network');
+
+	     var b = a.split("_");
+	     n = b[1];
+	     share(network, pageTitle, dataset[n]);
 	}
 
 	function rowClick(a) { 
@@ -167,10 +225,8 @@ function boot(el) {
 	     setNewRowView(n-1);
 	}
 
-var prevRef;
-
 	function setNewRowView(n){
-		var prevRow = document.getElementById("EntryDetail_"+prevRef);
+		var prevRow = document.getElementById("EntryDetail_"+prevDetailRef);
 		
 		if(prevRow){
 			removeClass(prevRow, 'gv-show-row')
@@ -182,7 +238,7 @@ var prevRef;
 		removeClass(targetRow, 'gv-hide-row')
 		addClass(targetRow, 'gv-show-row')
 		 
-		prevRef = n;
+		prevDetailRef = n;
 	
 	}
 

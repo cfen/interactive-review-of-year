@@ -10,7 +10,7 @@
 
 		{{#each entries:count}}
 			<tr class="entry-main-row" id="row_{{ count+1 }}">
-				<td class="entry-head" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em"> {{ count+1 }}.{{ Heading }} </td>
+				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ count+1 }}.{{ Heading }} </a> </td>
 			</tr>
 			<tr>
 				<td class="entry-subhead"> {{ Subheading }} </td>
@@ -18,11 +18,20 @@
 			<tr class="entry-detail-row gv-hide-row" id="EntryDetail_{{ count }}">
 				<td class="entry-detail">
 						{{#if (imgPath!=='')}}
-								<div class="gv-image-holder" style="height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain; ">
+								<div class="gv-image-holder" style="height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain;">
 
 								</div>
 						{{ /if }}
-					{{ Description }}
+						<div class="gv-desc-holder">
+							{{ Description }}
+
+							 <p class="dig-share-container">
+                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>
+                <button class="dig-share js-share-detail" data-network="twitter"  id="tw_{{ count }}"></button>
+                <button class="dig-share js-share-detail" data-network="email"  id="em_{{ count }}"></button>
+            </p>
+						</div>
+					
 				
 				</td>	
 			</tr>	

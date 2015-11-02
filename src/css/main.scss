@@ -15,6 +15,7 @@
 //Component css
 @import 'pageHeader';
 @import 'filters';
+@import 'filterFeature';
 
 
 //palette
@@ -112,8 +113,13 @@ a, a:hover, a:active {
         .entry-head{
             font-family: "Guardian Egyptian Web", Sans;
             font-weight:200;
-            line-height:0.9em;
+            
             cursor:pointer;
+        }
+
+        .entry-head a{
+            text-decoration: none;
+            line-height:0.9em;
         }
 
         .entry-subhead{
@@ -153,6 +159,7 @@ a, a:hover, a:active {
 .gv-image-holder{
     display:inline-block;
     top:10px;
+    margin: $gs-baseline $gs-gutter ;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
