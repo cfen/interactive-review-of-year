@@ -1,0 +1,48 @@
+Detail view
+
+1. Add social buttons X
+2. image placement X
+3. typography in body copy
+
+Header area
+1. Redesign filters area
+2. look at Caths AI file for button stylein 1-10 etc.
+
+Code
+1. Get short URL into interactive - look at STICKY
+	How to - GET SHORT URL
+
+	•With the url you need open type window.guardian in console
+	•Open the object
+	•then follow config > page > shortUrl
+
+2. Sort colors out - run a pre check and move L up/down depending on if a dark/light colour
+X 3. Add anchor tags in the subview.html - li on click scrollTo anchor X
+4. Add back to top after clicking filter
+5. Consider 2 column layout on wider screens - how will this work with opening detail view ?
+
+100  99
+98   97 
+96   95 
+94   93 
+92   91
+90   89
+88   87 
+86   85 
+84   83 
+82   81
+
+…………………
+
+
+20  19
+18  17 
+16  15 
+14  13 
+12  11
+
+10  9
+8   8 
+6   5 
+4   3 
+2   1
