@@ -15,13 +15,13 @@ function share(network, pageTitle, data) {
 	    var shareWindow;
 
 	    if (network === 'twitter') {
-	        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL;
+	        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL + "#row_" +numStr;
 	    } else if (network === 'facebook') {
 	        shareWindow = facebookBaseUrl + shareURL;
 	    } else if (network === 'email') {
-	        shareWindow = 'mailto:?subject=' + encodeURIComponent(pageTitle) + '&body=' + shareURL;
+	        shareWindow = 'mailto:?subject=' + encodeURIComponent(pageTitle) + '&body=' + shareURL+ "#row_" +numStr;
 	    } else if (network === 'google') {
-	        shareWindow = googleBaseUrl + shareURL;
+	        shareWindow = googleBaseUrl + shareURL+ "#row_" +numStr;
 	    }
 	
 

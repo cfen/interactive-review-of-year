@@ -11,24 +11,27 @@ var _ = require('underscore')
 var share  = require('./js/components/share');
 var scrollTo  = require('./js/utils/scroll-to');
 
-console.log(scrollTo)
  
 function boot(el) {
 	var app = new Ractive({
 		el: el,
 		template: require('./html/base.html'),
 		data: {
-			entries: require('./data/data.json')
+			// entries: require('./data/data.json')
 		},
 		components: {
 			pageHeader: require('./js/pageHeader'),
 			filters: require('./js/filters'),
 			filterFeature: require('./js/filterFeature'),
-			subView: require('./js/subView')
+			fixedFilters: require('./js/fixedFilters'),
+			subView: require('./js/subView'),
+			backToTop:  require('./js/backToTop')
 		},
 		updateView: function (data) {
 			dataset = modelData(data.sheets.Sheet1);
+			copyData = data.sheets.SheetCopy;
 			app.set('entries', dataset);
+			app.set('copyEntries', copyData);
 			buildView();
 			addListeners();
 		}
@@ -40,10 +43,12 @@ function boot(el) {
 	var baseColor = getBaseColor(baseColorSelector);
 
 	var previousColor = baseColor;
-	var baseLum = 0.175;
+	var baseLum = 0.075;
 	var typeSizeRange;
-	var pageTitle = getQueryVariable("page-title");
 	var prevDetailRef; // used to store reference to open detail in function setNewRowView
+
+	var pageTitle; //keep it global for social sharing functions
+
 
 		getJSON(url, app.updateView);
 
@@ -82,24 +87,37 @@ function boot(el) {
 	}
 
 	function setColorScheme(){
-				var filterArea = document.getElementById("filterArea").style.background = baseColor;
-				var filterAreaBG = document.getElementById("filterAreaBG").style.background = baseColor;
-				var featureAreaBG  = document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
-				var featureArea  = document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
-				
+				document.getElementById("filterArea").style.background = baseColor;
+				document.getElementById("filterAreaBG").style.background = baseColor;
+				document.getElementById("fixedFilters").style.background = baseColor;
+				document.getElementById("fixedFiltersBG").style.background = baseColor;
+				document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
+				document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 
 				var filterButtonIcon = document.getElementsByClassName("dig-filters__filter__link__circle");
 				 _.each(filterButtonIcon, function(item) {
 			        	item.style.color = baseColor;
 			       });
-
-				//
-
 	}
 
-	function addPageHeader(){
-		document.getElementById("gvPageHead").innerHTML = decodeURIComponent(pageTitle);
-	}
+	function setBaseCopy(){
+				
+				_.each(copyData, function(item,i){
+					if (item.Type == "PageHeader"){
+						pageTitle = String(item.Title);
+						document.getElementById("gvPageHead").innerHTML = pageTitle;
+					}
+				})
+				
+
+				
+				
+	}	
+
+	// function addPageHeader(pageTitle){
+	// 		console.log(pageTitle)
+	// 		document.getElementById("gvPageHead").innerHTML = "pageTitle";
+	// }
 
 	function modelData(rawData){	
 					var topPosTemp = 0;
@@ -122,9 +140,93 @@ function boot(el) {
 
 	}
 
+	function addScrollListener(){
+		var el = document.getElementById("fixedFiltersDIV")
+		//console.log(el.scrollTop)
+		// var el = .style.display = 'none';
+
+		
+		window.onscroll=function(){ checkElScroll(el) };
+	}
+
+	function checkElScroll(el)
+	{
+		
+	    var docViewTop = document.body.scrollTop;
+	    var docViewBottom = docViewTop + window.height;
+	    var backTop = document.getElementById("backToTop");
+
+	    if(isElementVisible(document.getElementById("featureAreaBG")))
+	    	{
+	    		hideElement(el);
+	    		hideElement(backTop);
+	    		unfixElement(backTop)
+	    	}else{
+	    		fixElement(backTop)
+	    		showElement(el);
+	    		showElement(backTop);
+	    	}
+
+	    // var elemTop = el.offset.top;
+	    // var elemBottom = elemTop + el.height;
+
+	    // return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	}
+
+	function hideElement(el)
+		{
+		 el.classList.remove("showing");
+		 el.classList.add("hiding");
+
+		}
+
+	function showElement(el)
+		{
+		 el.classList.remove("hiding");
+		 el.classList.add("showing");
+		}
+
+	function fixElement(el)
+		{
+		 var fixPos = document.getElementById("fixedFilters").offsetHeight;	
+		 el.classList.remove("dig-slice_relative");
+		 el.classList.add("dig-slice_fixed");
+		 el.style.top = fixPos+'px';
+		}
+
+	function unfixElement(el)
+		{
+		 el.classList.remove("dig-slice_fixed");
+		 el.classList.add("dig-slice_relative");
+		}	
+
+	function isElementVisible(el) {
+    	var rect = el.getBoundingClientRect(),
+        vWidth = window.innerWidth || doc.documentElement.clientWidth,
+        vHeight = window.innerHeight || doc.documentElement.clientHeight,
+        efp = function (x, y) { return document.elementFromPoint(x, y) };     
+
+        return(rect.height * -1 < rect.top)
+
+		    // // Return false if it's not in the viewport
+		    // if (rect.right < 0 || rect.bottom < 0 
+		    //         || rect.left > vWidth || rect.top > vHeight)
+		    //     return false;
+
+		    // // Return true if any of its four corners are visible
+		    // return (
+		    //       el.contains(efp(rect.left,  rect.top))
+		    //   ||  el.contains(efp(rect.right, rect.top))
+		    //   ||  el.contains(efp(rect.right, rect.bottom))
+		    //   ||  el.contains(efp(rect.left,  rect.bottom))
+		    // );
+	}
+
+
 	function buildView(){
+		setBaseCopy();
 		setColorScheme();
-		addPageHeader();
+		
 	}
 
 	function getBandInfo(a, max){
@@ -132,12 +234,15 @@ function boot(el) {
 		var maxN = Math.ceil((max/10));
 		var maxSteps = n + 1;
 
-		var typeSizeStep = 0.3
+		var typeSizeStep = 0.25
 
-			typeSizeRange = _.range (1, maxSteps, 1); // (min val, max val, step)
+			typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
 			typeSizeRange.reverse();
 
-		var multiplier = (maxN+1)-n;	
+		var multiplier = (maxN + 1)-n;	
+
+
+
 
 		return {
 			typeSize:(multiplier*typeSizeStep)+1,
@@ -180,15 +285,21 @@ function boot(el) {
 	        	});
 	       });
 
+		 
+		addScrollListener();
 		addSocialListeners(); 
 		addNavListeners();
 
+
+
 	}
+
+	
 
 	function addNavListeners(){
 
 		var filterEl = document.getElementsByClassName('js-filter')
-		console.log(filterEl)
+		
 		 _.each(filterEl, function(item) {
 	        	item.addEventListener('click', function(evt) {
 	        		var sectionId = item.getAttribute('data-section');
@@ -197,8 +308,12 @@ function boot(el) {
 		        });
 	       });
 
-		
 
+		document.getElementById('backToTopButton').addEventListener('click', function(evt){
+			scrollTo(document.getElementById("pageTop"));
+
+		}) 
+		
 	}
 
 	function addSocialListeners(){

@@ -1,5 +1,63 @@
 $day-spacing: 20px;
 
+
+.dig-slice__inner {
+    clear: left;
+    z-index: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 10px;
+    
+    @include mq(mobileLandscape) {
+        padding: 20px;
+    }
+
+    @each $bp in (tablet, desktop, leftCol, wide) {
+        @include mq($bp) {
+            max-width: map-get($mq-breakpoints, $bp);
+        }
+    }
+
+    .dig-slice--standfirst & {
+        margin-top: -10px;
+        @include mq(mobileLandscape) {
+            margin-top: -20px;
+        }
+        
+        .dig-slice__inner__left {
+            max-width: 660px;
+        }
+    }
+
+    .dig-slice--filters & {
+        background-color: #94bfdd;
+        @include mq(mobileLandscape) {
+            padding-bottom: 5px;
+        }
+    }
+}
+
+.dig-slice__inner__left {
+    position: relative;
+    margin-bottom: 20px;
+
+    @include mq(leftCol) {
+        box-sizing: border-box;
+        padding-right: 20px;
+        width: 140px;
+        float: left;
+    }
+
+    @include mq(wide) {
+        width: 220px;
+    }
+}
+
+.dig-slice__inner__main {
+    overflow: hidden;
+}
+
+
 .dig-filters,
 .dig-days {
     list-style: none;
@@ -18,17 +76,21 @@ $day-spacing: 20px;
     padding-right: 7px;
     box-sizing: border-box;
     font-family: "Guardian Egyptian Web", serif;
+    width: 30%;
+    float: left;
+    margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
-        margin-bottom: 15px;
-        float: left;
-        width: 50%;
+        
+        
+        
         height: 30px;
     }
 
     @include mq(desktop) {
         width: $gs-column-width;
-        height: $gs-baseline;
+        height: $gs-row-height;
+        margin-bottom: 0;
     }
 
 }
@@ -54,7 +116,7 @@ $day-spacing: 20px;
 .dig-filters__filter__link__text {
     display: inline-block;
     vertical-align: middle;
-    width: calc(30% - 38px);
+    width: calc(60% - $gs-gutter);
 
     @include mq(desktop){
         width: 100%;
@@ -62,7 +124,7 @@ $day-spacing: 20px;
 }
 
 .dig-filters__filter__link__circle {
-    display: inline-block;
+    
     vertical-align: middle;
     width: 30px;
     height: 30px;
@@ -70,9 +132,14 @@ $day-spacing: 20px;
     color: #94bfdd;
     background-color: white;
     margin-right: 4px;
-    @include mq(desktop){
-        display:none;
-    }
+    
+}
+
+.showing-mobile-only{
+    display: inline-block;
+        @include mq(desktop){
+            display:none;
+        }
 }
 
 .dig-days__day {
@@ -126,7 +193,7 @@ $day-spacing: 20px;
     }
 
     &::before {
-        counter-increment: day;
+        counter-incrrrement: day;
         content: counter(day);
         @include f-headline;
         position: absolute;

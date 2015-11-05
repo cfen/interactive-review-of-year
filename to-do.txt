@@ -9,7 +9,7 @@ Header area
 2. look at Caths AI file for button stylein 1-10 etc.
 
 Code
-1. Get short URL into interactive - look at STICKY
+1. Get short URL into interactive - look at STICKYNOTE 
 	How to - GET SHORT URL
 
 	•With the url you need open type window.guardian in console
@@ -19,6 +19,25 @@ Code
 2. Sort colors out - run a pre check and move L up/down depending on if a dark/light colour
 X 3. Add anchor tags in the subview.html - li on click scrollTo anchor X
 4. Add back to top after clicking filter
+
+
+In the composer page
+1. add the footer!
+
+Transitions
+Animate in back to top button
+
+
+List Area
+1. Look at adding block quotes or images etc to break list up a bit
+
+Add Global Social
+
+
+
+
+ON ICE
+
 5. Consider 2 column layout on wider screens - how will this work with opening detail view ?
 
 100  99

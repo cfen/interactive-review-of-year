@@ -1,0 +1,49 @@
+.dig-slice_fixed{
+        position: fixed;
+}
+
+.dig-slice_absolute{
+        position: absolute;
+}
+
+.dig-slice_relative{
+        position: relative;
+}
+
+.dig-slice__back-to-top {
+
+    height: $gs-row-height;
+    width:100%;
+    margin: $gs-baseline auto $gs-baseline $gs-gutter/2 ;
+    font-family: "Guardian Text Sans Web", sans;
+    font-size:0.8em;
+    color: $neutral-3;
+    background-color:white;
+    cursor:pointer;
+    @include mq(tablet){
+        margin: $gs-baseline $gs-gutter $gs-baseline $gs-gutter;
+    }
+
+    @include mq(leftCol) {
+        box-sizing: border-box;
+        
+        width: 140px;
+        float: left;
+    }
+
+    @include mq(wide) {
+        width: 220px;
+    }
+}
+
+.dig-slice__back-to-top a{
+    color:$neutral-2;
+}
+
+.dig-slice__back-to-top a:hover{
+    color:$neutral-1;
+    text-decoration:underline;
+}
+
+
+
