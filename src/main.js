@@ -11,6 +11,7 @@ var _ = require('underscore')
 var share  = require('./js/components/share');
 var scrollTo  = require('./js/utils/scroll-to');
 var detect = require('./js/utils/detect');
+var iframeMessenger = require('./js/utils/iframeMessenger');
 
  
 function boot(el) {
@@ -35,13 +36,13 @@ function boot(el) {
 			app.set('copyEntries', copyData);
 			buildView();
 			addListeners();
+			iframeMessenger.enableAutoResize();
 		}
 	});
 
 	var key = getQueryVariable("key");//'"';
 	var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
-	var baseColorSelector = getQueryVariable("colour");
-	var baseColor = getBaseColor(baseColorSelector);
+	var baseColor = getBaseColor();
 
 	var previousColor = baseColor;
 	var baseLum = 0.075;
@@ -78,14 +79,20 @@ function boot(el) {
 
 	}
 
-	function getBaseColor(v){
+	function getBaseColor(){
 
-				if (v == "culture"){ return "#951c55"}
-				if (v == "comment"){ return "#c05303"}
-				if (v == "multimedia"){ return "#484848"}
-				if (v == "sport"){ return "#1C4A00"}
+				_.each(copyData, function(item,i){
+					if (item.Type == "Section"){
+						if (item.Type == "culture"){ return "#951c55"}
+						if (item.Type == "comment"){ return "#c05303"}
+						if (item.Type == "multimedia"){ return "#484848"}
+						if (item.Type == "sport"){ return "#1C4A00"}
+					}
+				})
 
-				else {return "#194377"};
+				
+
+				return "#194377";
 
 	}
 

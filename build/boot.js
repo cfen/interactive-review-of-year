@@ -1,4 +1,4 @@
-define(['https://interactive.guim.co.uk/embed/2015/10/review-of-year/js/main.c8e6ab4e.js'], function(app) {
+define(['https://interactive.guim.co.uk/embed/2015/10/review-of-year/js/main.d69297b1.js'], function(app) {
     var css = document.createElement('link');
     
 	    css.type = 'text/css';
