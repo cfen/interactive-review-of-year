@@ -30,8 +30,9 @@ function boot(el) {
 			backToTop:  require('./js/backToTop')
 		},
 		updateView: function (data) {
-			dataset = modelData(data.sheets.Sheet1);
 			copyData = data.sheets.SheetCopy;
+			baseColor = setBaseColor(copyData);		
+			dataset = modelData(data.sheets.Sheet1);
 			app.set('entries', dataset);
 			app.set('copyEntries', copyData);
 			buildView();
@@ -42,9 +43,8 @@ function boot(el) {
 
 	var key = getQueryVariable("key");//'"';
 	var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
-	var baseColor = getBaseColor();
 
-	var previousColor = baseColor;
+	// var previousColor = baseColor;
 	var baseLum = 0.075;
 	var typeSizeRange;
 	var prevDetailRef; // used to store reference to open detail in function setNewRowView
@@ -52,6 +52,8 @@ function boot(el) {
 	var pageTitle; //keep it global for social sharing functions
 
 	var scrollShim;
+
+	
 
 
 		getJSON(url, app.updateView);
@@ -69,32 +71,7 @@ function boot(el) {
 			       return (false); 
 			}
 
-	function returnTextColor(clip){
-				var color = (clip.attr("style"));
-				color = color.split(";");
-				color = color[1];
-				color = color.split(":");
-				color = color[1];
-				return color;
-
-	}
-
-	function getBaseColor(){
-
-				_.each(copyData, function(item,i){
-					if (item.Type == "Section"){
-						if (item.Type == "culture"){ return "#951c55"}
-						if (item.Type == "comment"){ return "#c05303"}
-						if (item.Type == "multimedia"){ return "#484848"}
-						if (item.Type == "sport"){ return "#1C4A00"}
-					}
-				})
-
-				
-
-				return "#194377";
-
-	}
+	
 
 	function setColorScheme(){
 				document.getElementById("filterArea").style.background = baseColor;
@@ -111,7 +88,7 @@ function boot(el) {
 	}
 
 	function setBaseCopy(){
-				
+
 				_.each(copyData, function(item,i){
 					if (item.Type == "PageHeader"){
 						pageTitle = String(item.Title);
@@ -119,10 +96,45 @@ function boot(el) {
 					}
 				})
 				
-
+				document.getElementById("gvPageHead").innerHTML = pageTitle;
 				
 				
 	}	
+
+	function setBaseColor(copyData){
+
+		console.log(copyData)
+		var c = "#194377";
+				_.each(copyData, function(item,i){
+					var v = item.Title;
+					
+					if(item.Type == "Section"){
+						
+						console.log(v)
+						if (v == "culture"){ c = "#951c55"}
+						if (v == "comment"){ c = "#c05303"}
+						if (v == "multimedia"){ c = "#484848"}
+						if (v == "sport"){ c = "#1C4A00"}
+					}
+				console.log(c)
+				})
+
+				return c;
+						
+	}	
+
+
+	function returnTextColor(clip){
+				var color = (clip.attr("style"));
+				color = color.split(";");
+				color = color[1];
+				color = color.split(":");
+				color = color[1];
+				return color;
+
+	}
+
+
 
 	// function addPageHeader(pageTitle){
 	// 		console.log(pageTitle)
@@ -238,6 +250,7 @@ function boot(el) {
 
 
 	function buildView(){
+
 		setBaseCopy();
 		setColorScheme();
 
@@ -250,15 +263,11 @@ function boot(el) {
 		var maxN = Math.ceil((max/10));
 		var maxSteps = n + 1;
 
-		var typeSizeStep = 0.25
-
+		var typeSizeStep = 0.25;
 			typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
 			typeSizeRange.reverse();
 
 		var multiplier = (maxN + 1)-n;	
-
-
-
 
 		return {
 			typeSize:(multiplier*typeSizeStep)+1,
