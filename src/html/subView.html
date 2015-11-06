@@ -7,7 +7,7 @@
 	</thead> -->
 	
 	<tbody>
-
+		<a name="row_0"></a> 
 		{{#each entries:count}}
 			<tr class="entry-main-row" id="row_{{ count+1 }}">
 				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ count+1 }}.{{ Heading }} </a> </td>
@@ -22,16 +22,24 @@
 
 										</div>
 								{{ /if }}
-								<div class="gv-desc-holder">
-									{{ Description }}
+						<div class="gv-desc-holder">
+										{{ Description }}
 
-									 <p class="dig-share-container">
-		                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>
-		                <button class="dig-share js-share-detail" data-network="twitter"  id="tw_{{ count }}"></button>
-		                <button class="dig-share js-share-detail" data-network="email"  id="em_{{ count }}"></button>
-		            			</p>
-								</div>
-					</td>	
+							<p class="dig-share-container">
+				                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>
+				                <button class="dig-share js-share-detail" data-network="twitter"  id="tw_{{ count }}"></button>
+				                <button class="dig-share js-share-detail" data-network="email"  id="em_{{ count }}"></button>
+			            	</p>
+						</div>
+
+				<div class="mobile-back-top">
+							<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14">
+				<path fill="currentColor" d="M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z"></path></svg> 
+	
+
+					<a class="backToTop">Back To Top</a>
+
+				</td>	
 
 			</tr>	
 

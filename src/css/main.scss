@@ -172,6 +172,15 @@ a, a:hover, a:active {
         }
 }
 
+.gv-hideMobile{
+    display:none;
+        @include mq(desktop) {
+            display:block;
+        }
+
+}
+
+
 
 .gv-image-holder{
     display:inline-block;

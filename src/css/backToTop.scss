@@ -1,5 +1,21 @@
 .dig-slice_fixed{
-        position: fixed;
+
+    position: fixed;
+
+
+    @include mq(tablet){
+            width:180px;
+            right:30px;
+
+        }
+
+    @include mq(leftCol) {
+            width:120px;
+            padding-left:$gs-gutter/2;
+            left:auto;
+            right:auto;
+        }
+
 }
 
 .dig-slice_absolute{
@@ -10,39 +26,76 @@
         position: relative;
 }
 
-.dig-slice__back-to-top {
-
+.dig-slice__back-to-top, .mobile-back-top {
     height: $gs-row-height;
     width:100%;
     margin: $gs-baseline auto $gs-baseline $gs-gutter/2 ;
     font-family: "Guardian Text Sans Web", sans;
     font-size:0.8em;
     color: $neutral-3;
-    background-color:white;
+    vertical-align: top;
+    // border:1px solid $neutral-3;
+    // border-radius:18px;
     cursor:pointer;
-    @include mq(tablet){
-        margin: $gs-baseline $gs-gutter $gs-baseline $gs-gutter;
-    }
+  
 
-    @include mq(leftCol) {
-        box-sizing: border-box;
-        
+    @include mq(tablet) {
+        box-sizing: border-box; 
         width: 140px;
-        float: left;
+        
     }
 
     @include mq(wide) {
-        width: 220px;
+        
     }
 }
 
-.dig-slice__back-to-top a{
+.dig-slice__back-to-top a, .mobile-back-top a{
     color:$neutral-2;
 }
 
-.dig-slice__back-to-top a:hover{
+.dig-slice__back-to-top a:hover, .mobile-back-top a:hover{
     color:$neutral-1;
     text-decoration:underline;
+}
+
+.mobile-back-top{
+    display:block;
+
+    @include mq(tablet) {
+        display: none;
+        
+    }
+
+}
+
+.back-top-top-outer {
+    margin: 0 auto;
+    
+    
+    
+    // Breakpoints
+    @include mq(tablet) {
+        max-width: gs-span(9) + $gs-gutter*2;
+        
+    }
+
+    @include mq(desktop) {
+        max-width: gs-span(12) + $gs-gutter*2;
+        
+    }
+
+    @include mq(leftCol) {
+        padding-left: 0;
+        padding-right: 0;
+        max-width: gs-span(14) + $gs-gutter*2;
+    }
+    @include mq(wide) {
+        width: gs-span(16) + $gs-gutter*2;
+        max-width: none;
+    }
+
+
 }
 
 

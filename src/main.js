@@ -10,6 +10,7 @@ var getJSON = require('./js/utils/getjson');
 var _ = require('underscore')
 var share  = require('./js/components/share');
 var scrollTo  = require('./js/utils/scroll-to');
+var detect = require('./js/utils/detect');
 
  
 function boot(el) {
@@ -48,6 +49,8 @@ function boot(el) {
 	var prevDetailRef; // used to store reference to open detail in function setNewRowView
 
 	var pageTitle; //keep it global for social sharing functions
+
+	var scrollShim;
 
 
 		getJSON(url, app.updateView);
@@ -142,6 +145,9 @@ function boot(el) {
 
 	function addScrollListener(){
 		var el = document.getElementById("fixedFiltersDIV")
+
+
+		console.log()
 		//console.log(el.scrollTop)
 		// var el = .style.display = 'none';
 
@@ -156,38 +162,39 @@ function boot(el) {
 	    var docViewBottom = docViewTop + window.height;
 	    var backTop = document.getElementById("backToTop");
 
-	    if(isElementVisible(document.getElementById("featureAreaBG")))
+	       	if(isElementVisible(document.getElementById("featureAreaBG")))
 	    	{
 	    		hideElement(el);
-	    		hideElement(backTop);
-	    		unfixElement(backTop)
+	    		
+	    		//unfixElement(backTop);
 	    	}else{
-	    		fixElement(backTop)
+	    		
 	    		showElement(el);
-	    		showElement(backTop);
+	    		
 	    	}
 
-	    // var elemTop = el.offset.top;
-	    // var elemBottom = elemTop + el.height;
+	    	if(isElementVisible(document.getElementById("filterArea"))){
+				hideElement(backTop);
+	    	}else{
+				fixElement(backTop);
+				showElement(backTop);
+	    	}
 
-	    // return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	    
 	}
 
-	function hideElement(el)
-		{
+	function hideElement(el){
 		 el.classList.remove("showing");
 		 el.classList.add("hiding");
 
 		}
 
-	function showElement(el)
-		{
+	function showElement(el){
 		 el.classList.remove("hiding");
 		 el.classList.add("showing");
 		}
 
-	function fixElement(el)
-		{
+	function fixElement(el){
 		 var fixPos = document.getElementById("fixedFilters").offsetHeight;	
 		 el.classList.remove("dig-slice_relative");
 		 el.classList.add("dig-slice_fixed");
@@ -226,7 +233,9 @@ function boot(el) {
 	function buildView(){
 		setBaseCopy();
 		setColorScheme();
-		
+
+		console.log( detect.isAndroid() );
+
 	}
 
 	function getBandInfo(a, max){
@@ -280,17 +289,20 @@ function boot(el) {
 	        	document.getElementById(item.id).addEventListener("click", function(evt) {  
 	        		rowClick(this.id); 
 	        		evt.preventDefault();
-		            scrollTo(document.getElementById(this.id));
+
+	        		var i = this.id;
+	        		var a = i.split("_")
+	        		var n = (Math.floor(a[1]-1));
+		            evt.preventDefault();
+		            scrollTo(document.getElementById("row_" + n));
+		            //scrollTo(document.getElementById(this.id));
 
 	        	});
 	       });
 
-		 
-		addScrollListener();
+		addScrollListener(); -2
 		addSocialListeners(); 
 		addNavListeners();
-
-
 
 	}
 
@@ -304,13 +316,20 @@ function boot(el) {
 	        	item.addEventListener('click', function(evt) {
 	        		var sectionId = item.getAttribute('data-section');
 		            evt.preventDefault();
-		            scrollTo(document.getElementById("row_" + sectionId));
+		            scrollTo(document.getElementById("row_" + (sectionId-2)));
 		        });
 	       });
 
+		 var backTopBtns = document.getElementsByClassName('backToTop');
 
-		document.getElementById('backToTopButton').addEventListener('click', function(evt){
-			scrollTo(document.getElementById("pageTop"));
+		 _.each(backTopBtns, function(backTopBtn){
+					backTopBtn.addEventListener('click', function(evt){
+						evt.preventDefault();
+						scrollTo(document.getElementById("pageTop"));
+		 		}
+		 	)
+		
+
 
 		}) 
 		

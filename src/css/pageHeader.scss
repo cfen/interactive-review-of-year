@@ -1,7 +1,7 @@
 @import 'share';
 
 .dig-slice {
-    background-color: #dcdcdc;
+    background-color: none;
     &.dig-slice--filters {
         background-color: #617e8e;
     }
@@ -24,7 +24,7 @@
 .dig-share-container {
     border-bottom: 1px dotted #dfdfdf;
     line-height: 1;
-    padding-bottom: 10px;
+    padding-bottom: $gs-baseline;
 
     @include mq(leftCol) {
         border-bottom: 0;

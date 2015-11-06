@@ -17,8 +17,8 @@ Code
 	•then follow config > page > shortUrl
 
 2. Sort colors out - run a pre check and move L up/down depending on if a dark/light colour
-X 3. Add anchor tags in the subview.html - li on click scrollTo anchor X
-4. Add back to top after clicking filter
+
+3. No sticky nav in mobile view - just back to top
 
 
 In the composer page
