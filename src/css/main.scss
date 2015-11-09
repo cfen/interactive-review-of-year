@@ -108,6 +108,7 @@ a, a:hover, a:active {
     max-width: gs-span(8);
     font-size: 12px;
     border-collapse: collapse; 
+    border-spacing: 0;
 
 
     @include mq(tablet) {
@@ -132,6 +133,10 @@ a, a:hover, a:active {
             font-weight:200;
             
             cursor:pointer;
+            font-size: 12px;
+            @include mq(desktop) {
+                font-size: 26px;
+            }
         }
 
         .entry-head a{
@@ -140,7 +145,7 @@ a, a:hover, a:active {
         }
 
         .entry-subhead{
-            color:$neutral-3;
+            color:$neutral-2;
             font-family: "Guardian Egyptian Web", Sans;
             font-weight:200;
             font-size: 1.2em;
@@ -150,12 +155,13 @@ a, a:hover, a:active {
         .entry-detail{
             color:$neutral-2;
             font-family: "Guardian Text Sans Web", Sans;
-            font-weight:400;
             font-size: 1.2em;
             line-height:1.5em;
             padding-bottom: $gs-baseline;
             @include mq(tablet) {
-                    font-family: "Guardian Egyptian Text Web", Sans;
+                    font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
+                    font-size: 1.5em;
+                    line-height:1.8em;
                     padding-bottom: gs-height(1);
                 }
         }

@@ -265,7 +265,7 @@ function boot(el) {
 		var maxN = Math.ceil((max/10));
 		var maxSteps = n + 1;
 
-		var typeSizeStep = 0.25;
+		var typeSizeStep = 0.25; //0.25
 			typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
 			typeSizeRange.reverse();
 
