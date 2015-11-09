@@ -72,8 +72,6 @@
 .back-top-top-outer {
     margin: 0 auto;
     
-    
-    
     // Breakpoints
     @include mq(tablet) {
         max-width: gs-span(9) + $gs-gutter*2;
