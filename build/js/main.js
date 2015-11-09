@@ -329,7 +329,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			return {
 				typeSize:(multiplier*typeSizeStep)+1,
-				colorBand:ColorLuminance(baseColor, n*baseLum)
+				colorBand:ColorLuminance(baseColor, (maxN-n)*baseLum)
 			}
 
 		}
