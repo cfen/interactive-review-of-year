@@ -10,7 +10,7 @@
 		<a name="row_0"></a> 
 		{{#each entries:count}}
 			<tr class="entry-main-row" id="row_{{ count+1 }}">
-				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ count+1 }}.{{ Heading }} </a> </td>
+				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ count+1 }}.{{ title }} </a> </td>
 			</tr>
 			<tr>
 				<td class="entry-subhead"> {{ Subheading }} </td>
@@ -23,7 +23,7 @@
 										</div>
 								{{ /if }}
 						<div class="gv-desc-holder">
-										{{ Description }}
+										{{ text }}
 
 							<p class="dig-share-container">
 				                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>

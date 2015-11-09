@@ -202,15 +202,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 							_.each(rawData, function(item, i){
 								item.displaycount = i+1;
-								item.rankResize = ((rawData.length + 1 ) - item.Rank);
-								item.bandInfo = getBandInfo(item.Rank, rawData.length);
+								item.rankResize = ((rawData.length + 1 ) - item.number);
+								item.bandInfo = getBandInfo(item.number, rawData.length);
 								item.numSize = (item.typeSize * 0.75);
-								item.imgPath = item["Thumb image URL 500x500px"];
-								item.socialTwitter = encodeURIComponent("Guardian review "+item.Rank+" "+item.Heading)
-								item.detailImgPath = item["Main Image URL landscape 900 x 506px"];
+								item.imgPath = item.imageSizeThumb;
+								item.socialTwitter = encodeURIComponent("Guardian review "+item.number+" "+item.title)
+								item.detailImgPath = item.imageSizeThumb;
 								topPosTemp += item.lineH;
 								item.positioner = topPosTemp;
 								item.imageBoolean = item.imgPath === "";
+
+								console.log(item)
 							})
 
 					//rawData.reverse();
@@ -18719,8 +18721,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function share(network, pageTitle, data) {
 
-			var numStr = data.Rank;
-			var headStr = data.Heading
+			var numStr = data.number;
+			var headStr = data.title
 
 		    var twitterMessage = "@guardian "+decodeURIComponent(pageTitle)+" - number "+numStr+" "+headStr;
 		    var shareWindow;
@@ -19679,7 +19681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 18 */
 /***/ function(module, exports) {
 
-	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\t\t<a name=\"row_0\"></a> \n\t\t{{#each entries:count}}\n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<td class=\"entry-head\"><a href=\"#row_{{ count+1 }}\" style=\"color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em\">{{ count+1 }}.{{ Heading }} </a> </td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-subhead\"> {{ Subheading }} </td>\n\t\t\t</tr>\n\t\t\t<tr class=\"entry-detail-row gv-hide-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t\t\t<div class=\"gv-image-holder\" style=\"height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain;\">\n\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t\t<div class=\"gv-desc-holder\">\n\t\t\t\t\t\t\t\t\t\t{{ Description }}\n\n\t\t\t\t\t\t\t<p class=\"dig-share-container\">\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"facebook\" id=\"fb_{{ count }}\"></button>\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"twitter\"  id=\"tw_{{ count }}\"></button>\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"email\"  id=\"em_{{ count }}\"></button>\n\t\t\t            \t</p>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t<div class=\"mobile-back-top\">\n\t\t\t\t\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\t\n\n\t\t\t\t\t<a class=\"backToTop\">Back To Top</a>\n\n\t\t\t\t</td>\t\n\n\t\t\t</tr>\t\n\n\t\t\t<tr class=\"entry-seperator\">\n\t\t\t\t<td class=\"entry-seperator\" style=\"padding:{{ bandInfo.typeSize / 6 }}em\"></td>\n\t\t\t</tr>\t\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
+	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\t\t<a name=\"row_0\"></a> \n\t\t{{#each entries:count}}\n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<td class=\"entry-head\"><a href=\"#row_{{ count+1 }}\" style=\"color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em\">{{ count+1 }}.{{ title }} </a> </td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-subhead\"> {{ Subheading }} </td>\n\t\t\t</tr>\n\t\t\t<tr class=\"entry-detail-row gv-hide-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t\t\t<div class=\"gv-image-holder\" style=\"height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain;\">\n\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t\t<div class=\"gv-desc-holder\">\n\t\t\t\t\t\t\t\t\t\t{{ text }}\n\n\t\t\t\t\t\t\t<p class=\"dig-share-container\">\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"facebook\" id=\"fb_{{ count }}\"></button>\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"twitter\"  id=\"tw_{{ count }}\"></button>\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"email\"  id=\"em_{{ count }}\"></button>\n\t\t\t            \t</p>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t<div class=\"mobile-back-top\">\n\t\t\t\t\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\t\n\n\t\t\t\t\t<a class=\"backToTop\">Back To Top</a>\n\n\t\t\t\t</td>\t\n\n\t\t\t</tr>\t\n\n\t\t\t<tr class=\"entry-seperator\">\n\t\t\t\t<td class=\"entry-seperator\" style=\"padding:{{ bandInfo.typeSize / 6 }}em\"></td>\n\t\t\t</tr>\t\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
 
 /***/ },
 /* 19 */

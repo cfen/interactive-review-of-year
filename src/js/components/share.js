@@ -8,8 +8,8 @@ const googleBaseUrl = 'https://plus.google.com/share?url=';
 
 function share(network, pageTitle, data) {
 
-		var numStr = data.Rank;
-		var headStr = data.Heading
+		var numStr = data.number;
+		var headStr = data.title
 
 	    var twitterMessage = "@guardian "+decodeURIComponent(pageTitle)+" - number "+numStr+" "+headStr;
 	    var shareWindow;

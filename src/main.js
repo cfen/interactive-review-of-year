@@ -146,15 +146,17 @@ function boot(el) {
 
 						_.each(rawData, function(item, i){
 							item.displaycount = i+1;
-							item.rankResize = ((rawData.length + 1 ) - item.Rank);
-							item.bandInfo = getBandInfo(item.Rank, rawData.length);
+							item.rankResize = ((rawData.length + 1 ) - item.number);
+							item.bandInfo = getBandInfo(item.number, rawData.length);
 							item.numSize = (item.typeSize * 0.75);
-							item.imgPath = item["Thumb image URL 500x500px"];
-							item.socialTwitter = encodeURIComponent("Guardian review "+item.Rank+" "+item.Heading)
-							item.detailImgPath = item["Main Image URL landscape 900 x 506px"];
+							item.imgPath = item.imageSizeThumb;
+							item.socialTwitter = encodeURIComponent("Guardian review "+item.number+" "+item.title)
+							item.detailImgPath = item.imageSizeThumb;
 							topPosTemp += item.lineH;
 							item.positioner = topPosTemp;
 							item.imageBoolean = item.imgPath === "";
+
+							console.log(item)
 						})
 
 				//rawData.reverse();
