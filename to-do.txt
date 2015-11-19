@@ -1,3 +1,13 @@
+In the getBandInfo fn
+
+check length of array
+
+if array.length >50 use bands of 10
+
+if array.length < 50 && > 30 use bands of 5
+
+if array.length <30 use bands of 1
+
 Detail view
 
 1. Add social buttons X

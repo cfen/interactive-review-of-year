@@ -11,10 +11,12 @@ var _ = require('underscore')
 var share  = require('./js/components/share');
 var scrollTo  = require('./js/utils/scroll-to');
 var detect = require('./js/utils/detect');
+var getDataAltVariable = require('./js/utils/getDataAltVariable');
 var iframeMessenger = require('./js/utils/iframeMessenger');
 
- 
+ console.log(getDataAltVariable)
 function boot(el) {
+
 	var app = new Ractive({
 		el: el,
 		template: require('./html/base.html'),
@@ -30,9 +32,9 @@ function boot(el) {
 			backToTop:  require('./js/backToTop')
 		},
 		updateView: function (data) {
-			copyData = data.sheets.SheetCopy;
+			copyData = data.sheets.standfirstAndTitle;
 			baseColor = setBaseColor(copyData);		
-			dataset = modelData(data.sheets.Sheet1);
+			dataset = modelData(data.sheets.listEntries);
 			app.set('entries', dataset);
 			app.set('copyEntries', copyData);
 			buildView();
@@ -41,7 +43,7 @@ function boot(el) {
 		}
 	});
 
-	var key = getQueryVariable("key");//'"';
+	var key = getDataAltVariable();//'"';
 	var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
 
 	// var previousColor = baseColor;
@@ -53,38 +55,35 @@ function boot(el) {
 
 	var scrollShim;
 
-	
+	getJSON(url, app.updateView);
 
+	function getQueryVariable(variable){
 
-		getJSON(url, app.updateView);
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
 
-	function getQueryVariable(variable)
-			{
-			       var query = window.location.search.substring(1);
-			       var vars = query.split("&");
+	       for (var i=0;i<vars.length;i++) {
+	               var pair = vars[i].split("=");
+	               if(pair[0] == variable){return pair[1];}
+	       }
 
-			       for (var i=0;i<vars.length;i++) {
-			               var pair = vars[i].split("=");
-			               if(pair[0] == variable){return pair[1];}
-			       }
-
-			       return (false); 
-			}
+	       return (false); 
+	}
 
 	
 
 	function setColorScheme(){
-				document.getElementById("filterArea").style.background = baseColor;
-				document.getElementById("filterAreaBG").style.background = baseColor;
-				document.getElementById("fixedFilters").style.background = baseColor;
-				document.getElementById("fixedFiltersBG").style.background = baseColor;
-				document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
-				document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
+			document.getElementById("filterArea").style.background = baseColor;
+			document.getElementById("filterAreaBG").style.background = baseColor;
+			document.getElementById("fixedFilters").style.background = baseColor;
+			document.getElementById("fixedFiltersBG").style.background = baseColor;
+			document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
+			document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 
-				var filterButtonIcon = document.getElementsByClassName("dig-filters__filter__link__circle");
-				 _.each(filterButtonIcon, function(item) {
-			        	item.style.color = baseColor;
-			       });
+			var filterButtonIcon = document.getElementsByClassName("dig-filters__filter__link__circle");
+			 _.each(filterButtonIcon, function(item) {
+		        	item.style.color = baseColor;
+		       });
 	}
 
 	function setBaseCopy(){
@@ -94,21 +93,26 @@ function boot(el) {
 						pageTitle = String(item.Title);
 						document.getElementById("gvPageHead").innerHTML = pageTitle;
 					}
+
+					if (item.Type == "Standfirst"){
+						
+						document.getElementById("standfirstHolder").innerHTML = item.Copy;
+					}
 				})
 				
-				document.getElementById("gvPageHead").innerHTML = pageTitle;
+				
 				
 				
 	}	
 
 	function setBaseColor(copyData){
 
-		console.log(copyData)
+		
 		var c = "#194377";
 				_.each(copyData, function(item,i){
 					var v = item.Title;
 					
-					if(item.Type == "Section"){
+					if(item.Type == "GlobalSection"){
 						
 						console.log(v)
 						if (v == "culture"){ c = "#951c55"}
@@ -116,7 +120,7 @@ function boot(el) {
 						if (v == "multimedia"){ c = "#484848"}
 						if (v == "sport"){ c = "#1C4A00"}
 					}
-				console.log(c)
+				
 				})
 
 				return c;
@@ -149,14 +153,12 @@ function boot(el) {
 							item.rankResize = ((rawData.length + 1 ) - item.number);
 							item.bandInfo = getBandInfo(item.number, rawData.length);
 							item.numSize = (item.typeSize * 0.75);
-							item.imgPath = item.imageSizeThumb;
+							item.imgPath = item.imagePath;
 							item.socialTwitter = encodeURIComponent("Guardian review "+item.number+" "+item.title)
-							item.detailImgPath = item.imageSizeThumb;
+							item.detailImgPath = item.imagePath;
 							topPosTemp += item.lineH;
 							item.positioner = topPosTemp;
 							item.imageBoolean = item.imgPath === "";
-
-							console.log(item)
 						})
 
 				//rawData.reverse();
@@ -167,8 +169,6 @@ function boot(el) {
 	function addScrollListener(){
 		var el = document.getElementById("fixedFiltersDIV")
 
-
-		console.log()
 		//console.log(el.scrollTop)
 		// var el = .style.display = 'none';
 
@@ -256,13 +256,14 @@ function boot(el) {
 		setBaseCopy();
 		setColorScheme();
 
-		console.log( detect.isAndroid() );
-
 	}
 
 	function getBandInfo(a, max){
-		var n = Math.ceil((a/10));
-		var maxN = Math.ceil((max/10));
+
+		var bandNum = getBandNumber(max)
+
+		var n = Math.ceil((a/bandNum));
+		var maxN = Math.ceil((max/bandNum));
 		var maxSteps = n + 1;
 
 		var typeSizeStep = 0.25; //0.25
@@ -278,6 +279,18 @@ function boot(el) {
 
 	}
 	
+
+	function getBandNumber(max){
+		//max=31;
+		if (max > 30){
+			return 5;
+		}
+		if (max > 50){
+			return 10;
+		}
+		return 2;
+	}
+
 	
 	function ColorLuminance(hex, lum) {
 				
@@ -364,8 +377,8 @@ function boot(el) {
 	function socialDetailClick(shareEl) { 
 		 var a = shareEl.id;
 		 var network = shareEl.getAttribute('data-network');
-
 	     var b = a.split("_");
+
 	     n = b[1];
 	     share(network, pageTitle, dataset[n]);
 	}
@@ -393,7 +406,6 @@ function boot(el) {
 		prevDetailRef = n;
 	
 	}
-
 
 	function hasClass(el, className) {
 		  if (el.classList)
