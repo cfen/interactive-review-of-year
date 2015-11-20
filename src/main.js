@@ -61,12 +61,9 @@ function boot(el) {
 		}
 	});
 
-	
-
 	var key = getDataAltVariable();//'"';
 	var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
 
-	// var previousColor = baseColor;
 	var baseLum = 0.075;
 	var typeSizeRange;
 	var prevDetailRef; // used to store reference to open detail in function setNewRowView
@@ -79,7 +76,6 @@ function boot(el) {
 
 	function sliceGlobalArrays(){
 		sectionIds = sectionIds.slice(0, requiredSections);
-
 		console.log(sectionIds);
 	}
 
@@ -97,7 +93,40 @@ function boot(el) {
 	       return (false); 
 	}
 
-	
+	function setPageFurniture(headInfo){
+     
+        headInfo.forEach(item => {
+
+            if(item.Type === 'PageHeader'){
+                  globalTitle = item.Title;
+                  document.getElementById("gvPageHead").innerHTML = item.Title;
+            }
+
+            if(item.Type === 'Standfirst'){
+                  document.getElementById("standfirstHolder").innerHTML = item.Copy;
+            }
+
+
+
+            if(item.Type === 'GlobalSection'){
+                  setColorScheme(setBaseColor(item.Title));
+            }
+
+            if(item.Type === 'Section'){
+            	console.log(item);
+                var s = getSubTitleHTML(item);
+                console.log(document.getElementById("dig-lh-SubHead"))
+                //document.getElementById("dig-lh-SubHead").innerHTML = s;
+                
+            }
+
+        });
+
+}
+
+function getSubTitleHTML(item){
+    return "<a href='"+item.Link+"'>"+item.Title+"</a>";
+}
 
 	function setColorScheme(){
 			document.getElementById("filterArea").style.background = baseColor;
@@ -280,7 +309,7 @@ function boot(el) {
 
 	function buildView(){
 
-		setBaseCopy();
+		setPageFurniture(copyData)
 		setColorScheme();
 
 	}

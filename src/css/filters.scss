@@ -255,24 +255,76 @@ $day-spacing: 20px;
 }
 
 
-.dig-section-title {
 
-    font-family:"Guardian Egyptian Web", serif;
-    font-weight: 900;
-    font-size: 1em; 
-    line-height: 1em;
-    padding-right: 90px;
-    margin:0;
-    padding-bottom:$gs-baseline;
+.dig-section-title-sub {
+    margin-top: 0px;
+    color: white;
+    @include fs-header(1);
+        padding-right: 90px;
+    
     @include mq(leftCol) {
         padding-right: 0;
-        padding-bottom: 0;
     }
 
     .dig-slice--filters & {
-        color: #EFEFEF;
+        //color: #FFF;
     }
 }
+
+.dig-section-title {
+    margin-top: $gs-baseline/2;
+    color: rgba(255, 255, 255, 0.8);
+    @include fs-header(3);
+        padding-right: 90px;
+    
+    @include mq(leftCol) {
+        padding-right: 0;
+    }
+
+    .dig-slice--filters & {
+        //color: #FFF;
+    }
+}
+
+.dig-dark-font{
+    color:#222;
+}
+
+.dig-section-title a{
+    color: #FFF;
+    opacity: 0.8;
+    transition: opacity 0.1s ease-out;
+
+    &,
+    &:hover,
+    &:active {
+        color: white;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+
+// .dig-section-title {
+
+//     font-family:"Guardian Egyptian Web", serif;
+//     font-weight: 900;
+//     font-size: 1em; 
+//     line-height: 1em;
+//     padding-right: 90px;
+//     margin:0;
+//     padding-bottom:$gs-baseline;
+//     @include mq(leftCol) {
+//         padding-right: 0;
+//         padding-bottom: 0;
+//     }
+
+//     .dig-slice--filters & {
+//         color: #EFEFEF;
+//     }
+// }
 
 .dig-back-to-top {
     @include f-textSans;

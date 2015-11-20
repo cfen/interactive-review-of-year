@@ -110,7 +110,6 @@ a, a:hover, a:active {
     border-collapse: collapse; 
     border-spacing: 0;
 
-
     @include mq(tablet) {
         margin:$gs-baseline $gs-gutter $gs-baseline $gs-gutter;
         // font-size: 14px;
@@ -127,7 +126,6 @@ a, a:hover, a:active {
          margin: gs-height(1) auto $gs-baseline (gs-span(3) + $gs-gutter);
         
     }
-        
         .entry-head{
             font-family: "Guardian Egyptian Web", Sans;
             font-weight:200;
@@ -145,9 +143,9 @@ a, a:hover, a:active {
         }
 
         .entry-subhead{
-            color:$neutral-2;
+            color:rgba($neutral-2,0.8);
             font-family: "Guardian Egyptian Web", Sans;
-            font-weight:200;
+            font-weight:500;
             font-size: 1.2em;
             line-height:1.2em;
         }
@@ -163,6 +161,7 @@ a, a:hover, a:active {
                     // font-size: 1.5em;
                     // line-height:1.8em;
                     padding-bottom: gs-height(1);
+                    
                 }
         }
 

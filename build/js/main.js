@@ -117,12 +117,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		});
 
-		
-
 		var key = getDataAltVariable();//'"';
 		var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
 
-		// var previousColor = baseColor;
 		var baseLum = 0.075;
 		var typeSizeRange;
 		var prevDetailRef; // used to store reference to open detail in function setNewRowView
@@ -135,7 +132,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		function sliceGlobalArrays(){
 			sectionIds = sectionIds.slice(0, requiredSections);
-
 			console.log(sectionIds);
 		}
 
@@ -153,7 +149,40 @@ return /******/ (function(modules) { // webpackBootstrap
 		       return (false); 
 		}
 
-		
+		function setPageFurniture(headInfo){
+	     
+	        headInfo.forEach(item => {
+
+	            if(item.Type === 'PageHeader'){
+	                  globalTitle = item.Title;
+	                  document.getElementById("gvPageHead").innerHTML = item.Title;
+	            }
+
+	            if(item.Type === 'Standfirst'){
+	                  document.getElementById("standfirstHolder").innerHTML = item.Copy;
+	            }
+
+
+
+	            if(item.Type === 'GlobalSection'){
+	                  setColorScheme(setBaseColor(item.Title));
+	            }
+
+	            if(item.Type === 'Section'){
+	            	console.log(item);
+	                var s = getSubTitleHTML(item);
+	                console.log(document.getElementById("dig-lh-SubHead"))
+	                //document.getElementById("dig-lh-SubHead").innerHTML = s;
+	                
+	            }
+
+	        });
+
+	}
+
+	function getSubTitleHTML(item){
+	    return "<a href='"+item.Link+"'>"+item.Title+"</a>";
+	}
 
 		function setColorScheme(){
 				document.getElementById("filterArea").style.background = baseColor;
@@ -336,7 +365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		function buildView(){
 
-			setBaseCopy();
+			setPageFurniture(copyData)
 			setColorScheme();
 
 		}
@@ -19644,7 +19673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <a class=\"dig-tag\" href=\"http://www.theguardian.com/politics\" style=\"color:white !important;\">Television</a>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <h1 class=\"dig-title\" id=\"gvPageHead\"></h1>\n        </div>\n    </div>\n</div>\n\n<div class=\"dig-slice dig-slice--standfirst\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <p class=\"dig-date\">\n                Friday 30 October 2015 12:30 BST\n            </p>\n            <p class=\"dig-share-container\">\n                <button class=\"dig-share js-share\" data-network=\"facebook\"></button>\n                <button class=\"dig-share js-share\" data-network=\"twitter\"></button>\n                <button class=\"dig-share js-share\" data-network=\"email\"></button>\n            </p>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <p class=\"dig-standfirst\">\n                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo\n                <a href=\"http://www.theguardian.com/politics/2015/jul/31/david-cameron-we-havent-wasted-a-day-since-election\">\n                    guided only by the 'good book'\n                </a> \n                <b><a href=\"http://www.theguardian.com/profile/andrewsparrow\">Andrew Sparrow</a></b>\n                neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt\n            </p>\n            <ul class=\"dig-standfirst__links\">\n                <li><a href=\"http://www.theguardian.com/politics/2015/aug/14/david-cameron-first-100-days-what-has-conservative-government-actually-done\">Analysis: 2015 the best year of television ever</a></li>\n            </ul>\n        </div>\n    </div>\n</div>"
+	module.exports = "<div class=\"dig-slice\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\" id=\"dig-lh-SubHead\">\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <h1 class=\"dig-title\" id=\"gvPageHead\"></h1>\n        </div>\n    </div>\n</div>\n\n<div class=\"dig-slice dig-slice--standfirst\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <p class=\"dig-date\">\n                Friday 30 October 2015 12:30 BST\n            </p>\n            <p class=\"dig-share-container\">\n                <button class=\"dig-share js-share\" data-network=\"facebook\"></button>\n                <button class=\"dig-share js-share\" data-network=\"twitter\"></button>\n                <button class=\"dig-share js-share\" data-network=\"email\"></button>\n            </p>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <p class=\"dig-standfirst\">\n                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo\n                <a href=\"http://www.theguardian.com/politics/2015/jul/31/david-cameron-we-havent-wasted-a-day-since-election\">\n                    guided only by the 'good book'\n                </a> \n                <b><a href=\"http://www.theguardian.com/profile/andrewsparrow\">Andrew Sparrow</a></b>\n                neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt\n            </p>\n            <ul class=\"dig-standfirst__links\">\n                <li><a href=\"http://www.theguardian.com/politics/2015/aug/14/david-cameron-first-100-days-what-has-conservative-government-actually-done\">Analysis: 2015 the best year of television ever</a></li>\n            </ul>\n        </div>\n    </div>\n</div>"
 
 /***/ },
 /* 12 */
@@ -19667,7 +19696,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n\n                {{#each sectionIds:count}} \n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n            \t\t\t<span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n            \t\t</li>\n                {{/each}}    \n\n            \t\t\n            \t</ul>\n        </div>\n    </div>\n</div>\n\n\n\n "
+	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n\n                {{#each sectionIds:count}} \n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n            \t\t\t<span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n            \t\t</li>\n                {{/each}}    \n\n            \t\t\n            \t</ul>\n        </div>\n    </div>\n</div>\n\n\n\n "
 
 /***/ },
 /* 14 */
@@ -19713,7 +19742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"fixed-filters-outer hiding\" id=\"fixedFiltersDIV\">\n\n<div class=\"dig-slice dig-slice--filters js-top\" id=\"fixedFiltersBG\">\n    <div class=\"dig-slice__inner gv-hideMobile\"  id=\"fixedFilters\">\n        <h2 class=\"dig-slice__inner__left dig-section-title\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n                   \n                {{#each sectionIds:count}} \n                    <li class=\"dig-filters__filter\"> \n                    <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n                        <span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n                            <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n                        <span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n                    </li>\n                {{/each}}    \n\n            </ul>\n        </div>\n    </div>\n</div>\n\n</div>\n\n\n\n\n\n\n\n "
+	module.exports = "<div class=\"fixed-filters-outer hiding\" id=\"fixedFiltersDIV\">\n\n<div class=\"dig-slice dig-slice--filters js-top\" id=\"fixedFiltersBG\">\n    <div class=\"dig-slice__inner gv-hideMobile\"  id=\"fixedFilters\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n                   \n                {{#each sectionIds:count}} \n                    <li class=\"dig-filters__filter\"> \n                    <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n                        <span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n                            <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n                        <span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n                    </li>\n                {{/each}}    \n\n            </ul>\n        </div>\n    </div>\n</div>\n\n</div>\n\n\n\n\n\n\n\n "
 
 /***/ },
 /* 18 */
