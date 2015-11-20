@@ -14,7 +14,22 @@ var detect = require('./js/utils/detect');
 var getDataAltVariable = require('./js/utils/getDataAltVariable');
 var iframeMessenger = require('./js/utils/iframeMessenger');
 
- console.log(getDataAltVariable)
+var sectionIds = ['A', 'B', 'C', 'D', 'E', 'F','G','H','I','J'];
+var sectionTitles = {
+    'A': '1-10',
+    'B': '11-20',
+    'C': '21-30',
+    'D': '31-40',
+    'E': '41-50',
+    'F': '51-60',
+    'G': '61-70',
+    'H': '71-80',
+    'I': '81-90',
+    'J': '91-100'
+};
+
+var requiredSections;
+
 function boot(el) {
 
 	var app = new Ractive({
@@ -35,13 +50,18 @@ function boot(el) {
 			copyData = data.sheets.standfirstAndTitle;
 			baseColor = setBaseColor(copyData);		
 			dataset = modelData(data.sheets.listEntries);
+			requiredSections = Math.ceil(dataset.length/10);
 			app.set('entries', dataset);
 			app.set('copyEntries', copyData);
+			sliceGlobalArrays();
+			app.set('sectionIds', sectionIds);
 			buildView();
 			addListeners();
 			iframeMessenger.enableAutoResize();
 		}
 	});
+
+	
 
 	var key = getDataAltVariable();//'"';
 	var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
@@ -56,6 +76,13 @@ function boot(el) {
 	var scrollShim;
 
 	getJSON(url, app.updateView);
+
+	function sliceGlobalArrays(){
+		sectionIds = sectionIds.slice(0, requiredSections);
+
+		console.log(sectionIds);
+	}
+
 
 	function getQueryVariable(variable){
 
