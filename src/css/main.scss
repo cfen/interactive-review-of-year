@@ -106,14 +106,14 @@ a, a:hover, a:active {
 .gv-table{
     margin:$gs-baseline ($gs-gutter/2);
     max-width: gs-span(8);
-    font-size: 12px;
+    // font-size: 12px;
     border-collapse: collapse; 
     border-spacing: 0;
 
 
     @include mq(tablet) {
         margin:$gs-baseline $gs-gutter $gs-baseline $gs-gutter;
-        font-size: 14px;
+        // font-size: 14px;
     }
 
     @include mq(desktop) {
@@ -154,14 +154,14 @@ a, a:hover, a:active {
 
         .entry-detail{
             color:$neutral-2;
-            font-family: "Guardian Text Sans Web", Sans;
-            font-size: 1.2em;
-            line-height:1.5em;
+            // font-family: "Guardian Text Sans Web", Sans;
+            // font-size: 1.2em;
+            // line-height:1.5em;
             padding-bottom: $gs-baseline;
             @include mq(tablet) {
-                    font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
-                    font-size: 1.5em;
-                    line-height:1.8em;
+                    // font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
+                    // font-size: 1.5em;
+                    // line-height:1.8em;
                     padding-bottom: gs-height(1);
                 }
         }
