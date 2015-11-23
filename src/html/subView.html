@@ -10,42 +10,52 @@
 		<a name="row_0"></a> 
 		{{#each entries:count}} 
 			<tr class="entry-main-row" id="row_{{ count+1 }}">
-				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ count+1 }}.{{ title }} </a> </td>
+				<!-- <td>
+				<div style="height:60px; width:60px; floatt:left; background: url('{{ authorImagePath }}'); background-size: cover; background-repeat:no-repeat; border-radius:50%;"></div>
+			</td> -->
+				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ title }} </a></td>
 			</tr>
 			<tr>
+				
+				
 				<td class="entry-subhead"> {{ subHeader }} </td>
 			</tr>
-			<tr class="entry-detail-row gv-hide-row" id="EntryDetail_{{ count }}">
-				<td class="entry-detail">
-								{{#if (imgPath!=='')}}
-										<div class="gv-image-holder" style="height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain;">
 
-										</div>
-								{{ /if }}
-						<div class="gv-desc-holder">
-										<p>{{ text }}</p>
+			<tr class="entry-detail-row" id="EntryDetail_{{ count }}">
+				
+					<td class="entry-detail">
+										{{#if (imgPath!=='')}}
+												<div class="gv-image-holder" style="background: url('{{ imgPath }}') no-repeat; background-size: contain;">
 
-							<p class="dig-share-container">
-				                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>
-				                <button class="dig-share js-share-detail" data-network="twitter"  id="tw_{{ count }}"></button>
-				                <button class="dig-share js-share-detail" data-network="email"  id="em_{{ count }}"></button>
-			            	</p>
-						</div>
+													<div class="gv-portrait-holder"  style="height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;">
 
-				<div class="mobile-back-top">
-							<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14">
-				<path fill="currentColor" d="M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z"></path></svg> 
-	
+												</div>
+										{{ /if }}
+								<div class="gv-desc-holder">
+												<p>{{ text }}</p>
 
-					<a class="backToTop">Back To Top</a>
+									<p class="dig-share-container">
+						                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>
+						                <button class="dig-share js-share-detail" data-network="twitter"  id="tw_{{ count }}"></button>
+						                <button class="dig-share js-share-detail" data-network="email"  id="em_{{ count }}"></button>
+					            	</p>
+								</div>
 
-				</td>	
+						<div class="mobile-back-top">
+									<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14">
+						<path fill="currentColor" d="M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z"></path></svg> 
+			
 
+							<a class="backToTop">Back To Top</a>
+
+					</td>	
 			</tr>	
 
 			<tr class="entry-seperator">
+				
 				<td class="entry-seperator" style="padding:{{ bandInfo.typeSize / 4 }}em"></td>
 			</tr>	
+
 		{{/each}}
 
 	</tbody>

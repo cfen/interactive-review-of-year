@@ -188,15 +188,31 @@ a, a:hover, a:active {
 
 
 .gv-image-holder{
-    display:inline-block;
+    position:relative;
+    
+    margin: $gs-baseline $gs-gutter $gs-baseline 0;
+    height:280px;
+    width:168px;
     top:10px;
-    margin: $gs-baseline $gs-gutter ;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
+    float:left;
     background-color:#CCC;
+    background-repeat: no-repeat;
+
 }
 
+
+.gv-portrait-holder{
+    position: absolute;
+    margin: gs-baseline/2 0 0 gs-gutter;
+    bottom:0;
+    right:0;
+
+    border:10px #EFEFEF;
+     -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 3px solid #EFEFEF;
+}
 
 
 
