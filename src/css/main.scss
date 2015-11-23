@@ -146,8 +146,7 @@ a, a:hover, a:active {
             color:rgba($neutral-2,0.8);
             font-family: "Guardian Egyptian Web", Sans;
             font-weight:500;
-            font-size: 1.2em;
-            line-height:1.2em;
+            font-size: 0.6em;
         }
 
         .entry-detail{
@@ -186,32 +185,65 @@ a, a:hover, a:active {
 }
 
 
-
-.gv-image-holder{
-    position:relative;
-    
-    margin: $gs-baseline $gs-gutter $gs-baseline 0;
-    height:280px;
-    width:168px;
-    top:10px;
-    float:left;
-    background-color:#CCC;
-    background-repeat: no-repeat;
+.gv-showTablet{
+    display:none;
+        @include mq(tablet) {
+            display:block;
+        }
 
 }
 
 
-.gv-portrait-holder{
-    position: absolute;
-    margin: gs-baseline/2 0 0 gs-gutter;
-    bottom:0;
-    right:0;
+.gv-image-holder{
+    position:relative;    
+    margin: $gs-baseline $gs-gutter/2 $gs-baseline 0;
+    height:gs-height(4) + $gs-baseline;
+    width:gs-span(2);
+    top:10px;
+    float:left;
+    background-repeat: no-repeat;
 
+}
+
+.gv-desc-holder, .gv-img-holder-no-bg{
+    margin: $gs-baseline 0;
+}
+.gv-desc-holder p{
+    margin: 0;
+}
+
+.gv-item-social-holder{
+    float:left;
+    clear:both;
+}
+
+.gv-img-holder-no-bg{
+    float:left;
+    margin-right:$gs-gutter;
+}
+
+.gv-portrait-holder{
     border:10px #EFEFEF;
      -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
+    margin:  $gs-baseline 0;
     border: 3px solid #EFEFEF;
+
+         @include mq(tablet) {
+            margin-top: -6px;
+            margin-right:$gs-gutter;
+            float:left; 
+            
+        }
+        @include mq(leftCol) {
+            margin-left:-84px;
+            margin-right:$gs-gutter;
+            float:left; 
+            
+        }
+
+
 }
 
 

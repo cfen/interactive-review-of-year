@@ -13,33 +13,42 @@
 				<!-- <td>
 				<div style="height:60px; width:60px; floatt:left; background: url('{{ authorImagePath }}'); background-size: cover; background-repeat:no-repeat; border-radius:50%;"></div>
 			</td> -->
-				<td class="entry-head"><a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em">{{ title }} </a></td>
+				<td class="entry-head">
+					<div class="gv-portrait-holder" style="height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;"> </div>
+
+					<div>
+						<a href="#row_{{ count+1 }}" style="color:{{ bandInfo.colorBand }}; font-size:48px">{{ title }} </a>
+						<br/><span class="entry-subhead"  style="font-size:15px; float:left;">{{ subHeader }}</span>
+					</div>	
+
+				</td>
 			</tr>
-			<tr>
-				
-				
-				<td class="entry-subhead"> {{ subHeader }} </td>
-			</tr>
+			
 
 			<tr class="entry-detail-row" id="EntryDetail_{{ count }}">
 				
 					<td class="entry-detail">
 										{{#if (imgPath!=='')}}
-												<div class="gv-image-holder" style="background: url('{{ imgPath }}') no-repeat; background-size: contain;">
+												<!-- <div class="gv-image-holder" style="background: url('{{ imgPath }}') no-repeat; background-size: cover;">
 
-													<div class="gv-portrait-holder"  style="height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;">
+													<div class="gv-portrait-holder"  style="height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;"> 
 
-												</div>
+												</div>-->
+
+												<div class="gv-img-holder-no-bg"><img src="{{imgPath}}" alt=""/></div>
 										{{ /if }}
 								<div class="gv-desc-holder">
-												<p>{{ text }}</p>
+								<p>{{ text }}</p>
 
+									
+								</div>
+								<div class="gv-item-social-holder">
 									<p class="dig-share-container">
 						                <button class="dig-share js-share-detail" data-network="facebook" id="fb_{{ count }}"></button>
 						                <button class="dig-share js-share-detail" data-network="twitter"  id="tw_{{ count }}"></button>
 						                <button class="dig-share js-share-detail" data-network="email"  id="em_{{ count }}"></button>
 					            	</p>
-								</div>
+					            </div>
 
 						<div class="mobile-back-top">
 									<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14">

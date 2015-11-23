@@ -92,9 +92,8 @@ function boot(el) {
 	       return (false); 
 	}
 
-	function setPageFurniture(a){
-        a.forEach(item => {
-
+	function setPageFurniture(arr){
+        arr.forEach(item=>{
             if(item.Type === 'PageHeader'){
                   globalTitle = item.Title;
                   document.getElementById("gvPageHead").innerHTML = item.Title;
