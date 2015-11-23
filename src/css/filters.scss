@@ -286,6 +286,13 @@ $day-spacing: 20px;
     }
 }
 
+.dig-section-title a{
+    text-decoration:none;
+}
+.dig-section-title a:hover{
+    text-decoration:underline;
+}
+
 .dig-dark-font{
     color:#222;
 }

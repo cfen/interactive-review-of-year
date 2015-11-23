@@ -95,12 +95,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				// entries: require('./data/data.json')
 			},
 			components: {
-				pageHeader: __webpack_require__(10),
-				filters: __webpack_require__(12),
-				filterFeature: __webpack_require__(14),
-				fixedFilters: __webpack_require__(16),
-				subView: __webpack_require__(18),
-				backToTop:  __webpack_require__(20)
+				filters: __webpack_require__(10),
+				filterFeature: __webpack_require__(12),
+				fixedFilters: __webpack_require__(14),
+				subView: __webpack_require__(16),
+				backToTop:  __webpack_require__(18)
 			},
 			updateView: function (data) {
 				copyData = data.sheets.standfirstAndTitle;
@@ -111,9 +110,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				app.set('copyEntries', copyData);
 				sliceGlobalArrays();
 				app.set('sectionIds', sectionIds);
+				iframeMessenger.enableAutoResize();
 				buildView();
 				addListeners();
-				iframeMessenger.enableAutoResize();
+				
 			}
 		});
 
@@ -132,7 +132,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		function sliceGlobalArrays(){
 			sectionIds = sectionIds.slice(0, requiredSections);
-			console.log(sectionIds);
 		}
 
 
@@ -149,9 +148,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		       return (false); 
 		}
 
-		function setPageFurniture(headInfo){
-	     
-	        headInfo.forEach(item => {
+		function setPageFurniture(a){
+	        a.forEach(item => {
 
 	            if(item.Type === 'PageHeader'){
 	                  globalTitle = item.Title;
@@ -162,23 +160,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  document.getElementById("standfirstHolder").innerHTML = item.Copy;
 	            }
 
-
-
 	            if(item.Type === 'GlobalSection'){
 	                  setColorScheme(setBaseColor(item.Title));
 	            }
 
 	            if(item.Type === 'Section'){
-	            	console.log(item);
 	                var s = getSubTitleHTML(item);
-	                console.log(document.getElementById("dig-lh-SubHead"))
-	                //document.getElementById("dig-lh-SubHead").innerHTML = s;
-	                
+	                document.getElementById("gvPageSectionHead").innerHTML = s;    
 	            }
 
 	        });
 
 	}
+
+
 
 	function getSubTitleHTML(item){
 	    return "<a href='"+item.Link+"'>"+item.Title+"</a>";
@@ -226,7 +221,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						
 						if(item.Type == "GlobalSection"){
 							
-							console.log(v)
 							if (v == "culture"){ c = "#951c55"}
 							if (v == "comment"){ c = "#c05303"}
 							if (v == "multimedia"){ c = "#484848"}
@@ -365,8 +359,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		function buildView(){
 
-			setPageFurniture(copyData)
+			
 			setColorScheme();
+
+			setPageFurniture(copyData)
 
 		}
 
@@ -394,13 +390,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		function getBandNumber(max){
 			//max=31;
+			if (max > 11){
+				return 2;
+			}
 			if (max > 30){
 				return 5;
 			}
 			if (max > 50){
 				return 10;
 			}
-			return 2;
+			return 10;
 		}
 
 		
@@ -19673,7 +19672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\" id=\"dig-lh-SubHead\">\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <h1 class=\"dig-title\" id=\"gvPageHead\"></h1>\n        </div>\n    </div>\n</div>\n\n<div class=\"dig-slice dig-slice--standfirst\">\n    <div class=\"dig-slice__inner\">\n        <div class=\"dig-slice__inner__left\">\n            <p class=\"dig-date\">\n                Friday 30 October 2015 12:30 BST\n            </p>\n            <p class=\"dig-share-container\">\n                <button class=\"dig-share js-share\" data-network=\"facebook\"></button>\n                <button class=\"dig-share js-share\" data-network=\"twitter\"></button>\n                <button class=\"dig-share js-share\" data-network=\"email\"></button>\n            </p>\n        </div>\n        <div class=\"dig-slice__inner__main\">\n            <p class=\"dig-standfirst\">\n                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo\n                <a href=\"http://www.theguardian.com/politics/2015/jul/31/david-cameron-we-havent-wasted-a-day-since-election\">\n                    guided only by the 'good book'\n                </a> \n                <b><a href=\"http://www.theguardian.com/profile/andrewsparrow\">Andrew Sparrow</a></b>\n                neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt\n            </p>\n            <ul class=\"dig-standfirst__links\">\n                <li><a href=\"http://www.theguardian.com/politics/2015/aug/14/david-cameron-first-100-days-what-has-conservative-government-actually-done\">Analysis: 2015 the best year of television ever</a></li>\n            </ul>\n        </div>\n    </div>\n</div>"
+	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n\n                {{#each sectionIds:count}} \n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n            \t\t\t<span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n            \t\t</li>\n                {{/each}}    \n\n            \t\t\n            \t</ul>\n        </div>\n    </div>\n</div>\n\n\n\n "
 
 /***/ },
 /* 12 */
@@ -19682,7 +19681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 
 	function onrender() {
-		console.log('Rendering pageHeader');
+		console.log('Rendering pageFilterfeature');
 	}
 
 	module.exports = Ractive.extend({
@@ -19696,7 +19695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n\n                {{#each sectionIds:count}} \n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n            \t\t\t<span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n            \t\t</li>\n                {{/each}}    \n\n            \t\t\n            \t</ul>\n        </div>\n    </div>\n</div>\n\n\n\n "
+	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\" style=\"color:white;\" id=\"gvPageSectionHead\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                <h1 id=\"gvPageHead\"> </h1>\n               \n\n           \n\n\t\t\t\t<div class=\"gv-highlight-holder with-divider\" id =\"standfirstHolder\">\n            \t\t\n            \t<div>\n            \t\n\n            \n\t\t</div> \n    </div>\n</div>\n</div>    "
 
 /***/ },
 /* 14 */
@@ -19705,7 +19704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 
 	function onrender() {
-		console.log('Rendering pageFilterfeature');
+		console.log('Rendering fixedFilters');
 	}
 
 	module.exports = Ractive.extend({
@@ -19719,7 +19718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\" style=\"color:white;\">Television</h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                <h1 id=\"gvPageHead\">Interesting visual here</h1>\n               \n\n           \n\n\t\t\t\t<div class=\"gv-highlight-holder with-divider\" id =\"standfirstHolder\">\n            \t\t\n            \t<div>\n            \t\n\n            \n\t\t</div> \n    </div>\n</div>\n</div>    "
+	module.exports = "<div class=\"fixed-filters-outer hiding\" id=\"fixedFiltersDIV\">\n\n<div class=\"dig-slice dig-slice--filters js-top\" id=\"fixedFiltersBG\">\n    <div class=\"dig-slice__inner gv-hideMobile\"  id=\"fixedFilters\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n                   \n                {{#each sectionIds:count}} \n                    <li class=\"dig-filters__filter\"> \n                    <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n                        <span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n                            <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n                        <span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n                    </li>\n                {{/each}}    \n\n            </ul>\n        </div>\n    </div>\n</div>\n\n</div>\n\n\n\n\n\n\n\n "
 
 /***/ },
 /* 16 */
@@ -19728,7 +19727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 
 	function onrender() {
-		console.log('Rendering fixedFilters');
+		console.log('Rendering subview');
 	}
 
 	module.exports = Ractive.extend({
@@ -19742,33 +19741,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"fixed-filters-outer hiding\" id=\"fixedFiltersDIV\">\n\n<div class=\"dig-slice dig-slice--filters js-top\" id=\"fixedFiltersBG\">\n    <div class=\"dig-slice__inner gv-hideMobile\"  id=\"fixedFilters\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n                   \n                {{#each sectionIds:count}} \n                    <li class=\"dig-filters__filter\"> \n                    <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n                        <span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n                            <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n                        <span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n                    </li>\n                {{/each}}    \n\n            </ul>\n        </div>\n    </div>\n</div>\n\n</div>\n\n\n\n\n\n\n\n "
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Ractive = __webpack_require__(1);
-
-	function onrender() {
-		console.log('Rendering subview');
-	}
-
-	module.exports = Ractive.extend({
-	  		isolated: false,
-		  	onrender: onrender,
-	  		template: __webpack_require__(19)
-	});
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
 	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\t\t<a name=\"row_0\"></a> \n\t\t{{#each entries:count}} \n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<td class=\"entry-head\"><a href=\"#row_{{ count+1 }}\" style=\"color:{{ bandInfo.colorBand }}; font-size:{{ bandInfo.typeSize }}em\">{{ count+1 }}.{{ title }} </a> </td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"entry-subhead\"> {{ subHeader }} </td>\n\t\t\t</tr>\n\t\t\t<tr class=\"entry-detail-row gv-hide-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t\t\t<div class=\"gv-image-holder\" style=\"height:280px; width:280px; background: url('{{ imgPath }}'); background-size: contain;\">\n\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t\t<div class=\"gv-desc-holder\">\n\t\t\t\t\t\t\t\t\t\t<p>{{ text }}</p>\n\n\t\t\t\t\t\t\t<p class=\"dig-share-container\">\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"facebook\" id=\"fb_{{ count }}\"></button>\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"twitter\"  id=\"tw_{{ count }}\"></button>\n\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"email\"  id=\"em_{{ count }}\"></button>\n\t\t\t            \t</p>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t<div class=\"mobile-back-top\">\n\t\t\t\t\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\t\n\n\t\t\t\t\t<a class=\"backToTop\">Back To Top</a>\n\n\t\t\t\t</td>\t\n\n\t\t\t</tr>\t\n\n\t\t\t<tr class=\"entry-seperator\">\n\t\t\t\t<td class=\"entry-seperator\" style=\"padding:{{ bandInfo.typeSize / 4 }}em\"></td>\n\t\t\t</tr>\t\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
 
 /***/ },
-/* 20 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Ractive = __webpack_require__(1);
@@ -19780,12 +19756,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Ractive.extend({
 	  		isolated: false,
 		  	onrender: onrender,
-	  		template: __webpack_require__(21)
+	  		template: __webpack_require__(19)
 	});
 
 
 /***/ },
-/* 21 */
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"dig-slice hiding\" id=\"backToTop\">\n<div class=\"dig-slice__back-to-top  gv-hideMobile\">\n\n\t<div class=\"dig-slice__inner__left\">\n\t\n\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\n\n\t\t<a class=\"backToTop\">Back to top</a>\n\t</div>\n</div>\n\n</div>\n"

@@ -39,7 +39,6 @@ function boot(el) {
 			// entries: require('./data/data.json')
 		},
 		components: {
-			pageHeader: require('./js/pageHeader'),
 			filters: require('./js/filters'),
 			filterFeature: require('./js/filterFeature'),
 			fixedFilters: require('./js/fixedFilters'),
@@ -55,9 +54,10 @@ function boot(el) {
 			app.set('copyEntries', copyData);
 			sliceGlobalArrays();
 			app.set('sectionIds', sectionIds);
+			iframeMessenger.enableAutoResize();
 			buildView();
 			addListeners();
-			iframeMessenger.enableAutoResize();
+			
 		}
 	});
 
@@ -76,7 +76,6 @@ function boot(el) {
 
 	function sliceGlobalArrays(){
 		sectionIds = sectionIds.slice(0, requiredSections);
-		console.log(sectionIds);
 	}
 
 
@@ -93,9 +92,8 @@ function boot(el) {
 	       return (false); 
 	}
 
-	function setPageFurniture(headInfo){
-     
-        headInfo.forEach(item => {
+	function setPageFurniture(a){
+        a.forEach(item => {
 
             if(item.Type === 'PageHeader'){
                   globalTitle = item.Title;
@@ -106,23 +104,20 @@ function boot(el) {
                   document.getElementById("standfirstHolder").innerHTML = item.Copy;
             }
 
-
-
             if(item.Type === 'GlobalSection'){
                   setColorScheme(setBaseColor(item.Title));
             }
 
             if(item.Type === 'Section'){
-            	console.log(item);
                 var s = getSubTitleHTML(item);
-                console.log(document.getElementById("dig-lh-SubHead"))
-                //document.getElementById("dig-lh-SubHead").innerHTML = s;
-                
+                document.getElementById("gvPageSectionHead").innerHTML = s;    
             }
 
         });
 
 }
+
+
 
 function getSubTitleHTML(item){
     return "<a href='"+item.Link+"'>"+item.Title+"</a>";
@@ -170,7 +165,6 @@ function getSubTitleHTML(item){
 					
 					if(item.Type == "GlobalSection"){
 						
-						console.log(v)
 						if (v == "culture"){ c = "#951c55"}
 						if (v == "comment"){ c = "#c05303"}
 						if (v == "multimedia"){ c = "#484848"}
@@ -309,8 +303,10 @@ function getSubTitleHTML(item){
 
 	function buildView(){
 
-		setPageFurniture(copyData)
+		
 		setColorScheme();
+
+		setPageFurniture(copyData)
 
 	}
 
@@ -338,13 +334,16 @@ function getSubTitleHTML(item){
 
 	function getBandNumber(max){
 		//max=31;
+		if (max > 11){
+			return 2;
+		}
 		if (max > 30){
 			return 5;
 		}
 		if (max > 50){
 			return 10;
 		}
-		return 2;
+		return 10;
 	}
 
 	
