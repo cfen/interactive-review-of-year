@@ -125,8 +125,6 @@ function getSubTitleHTML(item){
 	function setColorScheme(){
 			document.getElementById("filterArea").style.background = baseColor;
 			document.getElementById("filterAreaBG").style.background = baseColor;
-			document.getElementById("fixedFilters").style.background = baseColor;
-			document.getElementById("fixedFiltersBG").style.background = baseColor;
 			document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
 			document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 

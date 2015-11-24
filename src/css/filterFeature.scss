@@ -50,8 +50,22 @@
 }
 
 .gv-highlight-holder{
+    margin: 0 0 $gs-row-height 0;
     width:100%;
     max-width: gs-span(8);
+    font-size: 1.4em;
+    color: white;
+    line-height: 1.5em;
+
+}
+
+.gv-highlight-holder a{
+    color: rgba(255,255,255,0.8);
+    text-decoration:none;
+}
+.gv-highlight-holder a:hover{
+    color:rgba(255,255,255,1);
+    text-decoration:underline;
 }
 
 .with-divider{
