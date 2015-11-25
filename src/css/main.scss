@@ -38,12 +38,18 @@ $maps-support-3: map-get($pasteup-palette, 'maps-support-3');
 @import 'filterFeature';
 @import 'fixedFilters';
 @import 'backToTop';
+@import 'metaContainer';
 
 
 
 // Setup page
+figure.element {
+    margin-top: 0 !important;
+}
+
+
 body {
-    margin: 0;
+    margin: 0 !important;
     padding: 0;
     -webkit-font-smoothing: antialiased;
 
@@ -68,14 +74,18 @@ a, a:hover, a:active {
 
 // Note: Access images using absolute '/imgs/' paths
 .gv-wrapper {
-    margin: 0 auto;
     
+    width:100%;
+    margin-right:$gs-gutter;
     
-    
+    @include mq(mobileLandscape) {
+        max-width: gs-span(7) + $gs-gutter*2;
+    }
+
     // Breakpoints
     @include mq(tablet) {
+        margin: 0 auto;
         max-width: gs-span(9) + $gs-gutter*2;
-        
     }
 
     @include mq(desktop) {
@@ -104,26 +114,39 @@ a, a:hover, a:active {
 
 
 .gv-table{
-    margin:$gs-baseline ($gs-gutter/2);
-    max-width: gs-span(8);
+    width:100%;
+    max-width: gs-span(4);
     // font-size: 12px;
     border-collapse: collapse; 
     border-spacing: 0;
+    margin:0 $gs-gutter/2;
 
-    @include mq(tablet) {
-        margin:$gs-baseline $gs-gutter $gs-baseline $gs-gutter;
-        // font-size: 14px;
+    // @include mq(tablet) {
+    //     margin:0 $gs-gutter;
+    //     max-width: gs-span(8);
+    //     // font-size: 14px;
+    // }
+
+    @include mq(mobileLandscape){
+        max-width:gs-span(6);
+        margin:0 $gs-gutter;
+    }
+
+    @include mq(tablet){
+        max-width:gs-span(8);
     }
 
     @include mq(desktop) {
         // font-size: 20px;
+        margin:0 $gs-gutter;
     }
 
     @include mq(leftCol) {
-        margin: gs-height(1) auto $gs-baseline (gs-span(2)+$gs-gutter);
+        margin: 0 auto $gs-baseline (gs-span(2)+$gs-gutter);
+        max-width:gs-span(8);
     }
     @include mq(wide) {
-         margin: gs-height(1) auto $gs-baseline (gs-span(3) + $gs-gutter);
+         margin: 0 auto $gs-baseline (gs-span(3) + $gs-gutter);
         
     }
         .entry-head{
@@ -143,7 +166,7 @@ a, a:hover, a:active {
         }
 
         .entry-subhead{
-            color:rgba($neutral-2,0.8);
+            color:rgba($neutral-1,0.8);
             font-family: "Guardian Egyptian Web", Sans;
             font-weight:500;
             font-size: 0.6em;
@@ -213,6 +236,7 @@ a, a:hover, a:active {
 }
 
 .gv-item-social-holder{
+    width: 100%;
     float:left;
     clear:both;
 }
@@ -223,6 +247,8 @@ a, a:hover, a:active {
 }
 
 .gv-portrait-holder{
+    width:60px; 
+    height:60px;
     border:10px #EFEFEF;
      -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -237,7 +263,9 @@ a, a:hover, a:active {
             
         }
         @include mq(leftCol) {
-            margin-left:-84px;
+            width:72px; 
+            height:72px;
+            margin-left:-96px;
             margin-right:$gs-gutter;
             float:left; 
             
@@ -249,6 +277,67 @@ a, a:hover, a:active {
 
 .gv-image-book-cover{
     width:120px;
+}
+
+.dig-share-float-span{
+    float:right; 
+     @include mq(tablet) {
+            float:right; 
+            
+        }
+}
+
+.gv-buy-book-button{
+    -webkit-font-smoothing: antialiased;
+    background-color: rgb(184, 34, 102);
+    border: 1px solid rgb(184, 34, 102);
+    border-radius: 1000px;  
+    box-sizing: border-box;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 32px;
+    line-height: 30px;
+    list-style-position: inside;
+    list-style-type: none; 
+    margin: 0 8px 8px 0;
+    outline-color: rgb(255, 255, 255);
+    outline-style: none;
+    outline-width: 0px;
+    overflow: hidden;
+    padding: 0 12px;
+    text-align: left;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+    width: gs-span(2);
+}
+
+.gv-right-button-arrow{
+    -webkit-font-smoothing: antialiased;
+    fill: rgb(255, 255, 255);
+    float: right;
+    height: 31px;
+    list-style-position: inside;
+    list-style-type: none;
+    margin-left: 0px;
+    margin-right: -8px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.gv-book-item-head{
+    font-size: 2.4em;
+    font-weight:400;
+    @include mq(tablet) {
+            font-size: 2em;
+            font-weight:200;
+            
+        }
 }
 
 

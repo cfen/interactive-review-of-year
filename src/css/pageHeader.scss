@@ -11,25 +11,6 @@
     @include fs-header(3);
 }
 
-.dig-date {
-    @include fs-textSans(1);
-    padding-top: 2px;
-    min-height: 48px;
-    box-sizing: border-box;
-    color: #767676;
-    border-top: 1px dotted #dfdfdf;
-    border-bottom: 1px dotted #dfdfdf;
-}
-
-.dig-share-container {
-    border-bottom: 1px dotted #dfdfdf;
-    line-height: 1;
-    padding-bottom: $gs-baseline;
-
-    @include mq(leftCol) {
-        border-bottom: 0;
-    }
-}
 
 .dig-title {
     @include f-headline;

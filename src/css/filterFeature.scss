@@ -20,11 +20,15 @@
 .dig-slice__inner__graphic h1{
 	font-family: "Guardian Egyptian Web", serif; 
 	font-weight:200;
-    font-size: 3em;
+    
     line-height:1em;
     margin:0;
     color: white;
-    padding-bottom: gs-height(1);
+    padding-bottom: $gs-baseline;
+
+     @include mq(leftCol) {
+        font-size:2.4em;
+    }
     
 }
 
@@ -50,12 +54,17 @@
 }
 
 .gv-highlight-holder{
-    margin: 0 0 $gs-row-height 0;
+    margin: 0 0 $gs-baseline 0;
     width:100%;
     max-width: gs-span(8);
-    font-size: 1.4em;
     color: white;
-    line-height: 1.5em;
+        
+
+    @include mq(tablet) {
+         font-size: 1.4em;
+        line-height: 1.5em;
+        margin: 0 0 $gs-row-height 0;
+    }
 
 }
 

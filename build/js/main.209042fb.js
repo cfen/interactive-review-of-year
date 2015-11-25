@@ -65,10 +65,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var getJSON = __webpack_require__(2);
 	var _ = __webpack_require__(3)
 	var share  = __webpack_require__(4);
-	var scrollTo  = __webpack_require__(5);
-	var detect = __webpack_require__(6);
-	var getDataAltVariable = __webpack_require__(7);
-	var iframeMessenger = __webpack_require__(8);
+	var formatGuardianDate = __webpack_require__(5);
+	var globalShare  = __webpack_require__(6);
+	var scrollTo  = __webpack_require__(7);
+	var detect = __webpack_require__(8);
+	var getDataAltVariable = __webpack_require__(9);
+	var iframeMessenger = __webpack_require__(10);
 	
 	var sectionIds = ['A', 'B', 'C', 'D', 'E', 'F','G','H','I','J'];
 	var sectionTitles = {
@@ -85,21 +87,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	var requiredSections;
+	var publishedDate;
 	
 	function boot(el) {
 	
+		//set some globals 
+	
+	    publishedDate = formatGuardianDate();
+	
 		var app = new Ractive({
 			el: el,
-			template: __webpack_require__(9),
+			template: __webpack_require__(11),
 			data: {
 				// entries: require('./data/data.json')
 			},
 			components: {
-				filters: __webpack_require__(10),
-				filterFeature: __webpack_require__(12),
-				fixedFilters: __webpack_require__(14),
-				subView: __webpack_require__(16),
-				backToTop:  __webpack_require__(18)
+				filters: __webpack_require__(12),
+				filterFeature: __webpack_require__(14),
+				fixedFilters: __webpack_require__(16),
+				metaContainer: __webpack_require__(18),
+				subView: __webpack_require__(20),
+				backToTop:  __webpack_require__(22)
 			},
 			updateView: function (data) {
 				copyData = data.sheets.standfirstAndTitle;
@@ -110,7 +118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				app.set('copyEntries', copyData);
 				sliceGlobalArrays();
 				app.set('sectionIds', sectionIds);
-				iframeMessenger.enableAutoResize();
+				//iframeMessenger.enableAutoResize();
 				buildView();
 				addListeners();
 				
@@ -170,6 +178,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        });
 	
+	        var a = document.getElementsByClassName('dig-global-date-container');
+	        [].forEach.call(a, function (item) {  item.innerHTML = publishedDate;});
+	
 	}
 	
 	
@@ -199,7 +210,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 	
 						if (item.Type == "Standfirst"){
-							
 							document.getElementById("standfirstHolder").innerHTML = item.Copy;
 						}
 					})
@@ -439,13 +449,27 @@ return /******/ (function(modules) { // webpackBootstrap
 		        	});
 		       });
 	
+			 var buyButton = document.getElementsByClassName("gv-buy-book-button");
+	
+			  _.each(buyButton, function(item) {
+			  	document.getElementById(item.id).addEventListener("click", function(evt) { 
+			  		evt.preventDefault();
+			  		var i = item.id;
+		        	var a = i.split("_");
+		        	var d = dataset[parseInt(a[1])]
+	
+	
+		        	window.open(d.buyBookLink, "_blank");
+		        	});
+			  });
+	
 			addScrollListener(); -2
 			addSocialListeners(); 
 			addNavListeners();
 	
 		}
 	
-		
+	
 	
 		function addNavListeners(){
 	
@@ -475,20 +499,50 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 	
 		function addSocialListeners(){
-			var socialDetail = document.getElementsByClassName("js-share-detail");
+			var socialDetail = document.getElementsByClassName("atom-share");
 	
 			_.each(socialDetail, function(item) {
 		        	document.getElementById(item.id).addEventListener("click", function() {  socialDetailClick(this); });
 		       }); 
+	
+			var socialGlobal = document.getElementsByClassName("js-share");
+	
+			_.each(socialGlobal, function(item) {
+					document.getElementById(item.id).addEventListener("click", function() {  socialGlobalClick(this); });
+		       }); 
+	
+	
+	
 		}
 	
 		function socialDetailClick(shareEl) { 
-			 var a = shareEl.id;
-			 var network = shareEl.getAttribute('data-network');
-		     var b = a.split("_");
-	
+			var titleStr;
+			var a = shareEl.id;
+			var network = shareEl.getAttribute('data-network');
+		    var b = a.split("_");
+				_.each(copyData, function(item,i){
+						if (item.Type == "PageHeader"){
+								titleStr = String(item.Title);
+						}
+				})
 		     n = b[1];
-		     share(network, pageTitle, dataset[n]);
+		     
+		     share(network, titleStr, dataset[n]);
+		}
+	
+		function socialGlobalClick(shareEl) { 
+			var titleStr;
+	
+			var network = shareEl.getAttribute('data-network');
+	
+				_.each(copyData, function(item,i){
+						if (item.Type == "PageHeader"){
+								titleStr = String(item.Title);
+						}
+				})
+	
+		     
+		     globalShare(network, titleStr);
 		}
 	
 		function rowClick(a) { 
@@ -18776,19 +18830,28 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	
-	var shareURL = encodeURIComponent('http://gu.com/p/4bft3'); // TODO: short url
-	var hashTag = '#100ToryDays';
+	var shareURL = setShortURL();// TODO: short url
+	var hashTag = '#100GuardianReviewOfYear';
 	
 	const twitterBaseUrl = 'https://twitter.com/intent/tweet?text=';
 	const facebookBaseUrl = 'https://www.facebook.com/sharer/sharer.php?ref=responsive&u=';
 	const googleBaseUrl = 'https://plus.google.com/share?url=';
+	
+	function setShortURL(){
+		var v = encodeURIComponent('http://gu.com'); 
+		if(window.guardian){
+			v = encodeURIComponent(window.guardian.config.page.shortUrl)
+		}
+		return v;
+	}
+	
 	
 	function share(network, pageTitle, data) {
 	
 			var numStr = data.number;
 			var headStr = data.title
 	
-		    var twitterMessage = "@guardian "+decodeURIComponent(pageTitle)+" - number "+numStr+" "+headStr;
+		    var twitterMessage = "@guardian "+decodeURIComponent(pageTitle)+" "+headStr;
 		    var shareWindow;
 	
 		    if (network === 'twitter') {
@@ -18801,12 +18864,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		        shareWindow = googleBaseUrl + shareURL+ "#row_" +numStr;
 		    }
 		
-	
+		//console.log(data)
 	    window.open(shareWindow, network + 'share', 'width=640,height=320');
-	
-	
-	
-	    
+	  
 	}
 	
 	
@@ -18817,6 +18877,84 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	
+	
+	function formatGuardianDate(){
+		n = 1;
+		if(window.guardian){
+			n = window.guardian.config.page.webPublicationDate;
+		}
+	
+	    var n = new Date(n); 
+	    
+	
+	    var locale = "en-gb",
+	    d = n.toLocaleString(locale, { weekday: "long", year: "numeric", month: "long",
+	        day: "numeric", hour: "numeric", minute: "numeric"});
+	
+	    d=d.split(",").join("");
+	    d=d.split(":").join(".");
+	    d=d+" GMT";
+	    
+	    return d;
+	}
+	
+	
+	module.exports = formatGuardianDate;
+	
+	
+	
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	var shareURL = setShortURL();// TODO: short url
+	var hashTag = '#GuardianReviewOfTheYear';
+	
+	const twitterBaseUrl = 'https://twitter.com/intent/tweet?text=';
+	const facebookBaseUrl = 'https://www.facebook.com/sharer/sharer.php?ref=responsive&u=';
+	const googleBaseUrl = 'https://plus.google.com/share?url=';
+	
+	function setShortURL(){
+		var v = encodeURIComponent('http://gu.com'); 
+		if(window.guardian){
+			v = encodeURIComponent(window.guardian.config.page.shortUrl)
+		}
+		return v;
+	}
+	
+	function globalShare(network, pageTitle) {
+	
+		var twitterMessage = decodeURIComponent(pageTitle)+" @guardian ";
+		    var shareWindow;
+	
+		    if (network === 'twitter') {
+		        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL;
+		    } else if (network === 'facebook') {
+		        shareWindow = facebookBaseUrl + shareURL;
+		    } else if (network === 'email') {
+		        shareWindow = 'mailto:?subject=' + encodeURIComponent(pageTitle) + '&body=' + shareURL;
+		    } else if (network === 'google') {
+		        shareWindow = googleBaseUrl + shareURL;
+		    }
+		
+		//console.log(data)
+	    window.open(shareWindow, network + 'share', 'width=640,height=320');
+	  
+	}
+	
+	
+	
+	
+	module.exports = globalShare;
+
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	
@@ -18856,7 +18994,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	
@@ -19194,7 +19332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
 	function getDataAltVariable()
@@ -19210,7 +19348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getDataAltVariable;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -19643,33 +19781,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"l-side-margins\" id=\"pageTop\">\n\t<!-- <pageHeader/> -->\n\n    <filterFeature/>\n    \n\t<filters/>\n\n\n\n<div class=\"gv-wrapper\">\n    \n\t<backToTop />\n\n    <subView />\n\n\n    \n</div>\n\n</div>\n"
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Ractive = __webpack_require__(1);
-	
-	function onrender() {
-		console.log('Rendering pageHeader');
-	}
-	
-	module.exports = Ractive.extend({
-	  		isolated: false,
-		  	onrender: onrender,
-	  		template: __webpack_require__(11)
-	});
-
-
-/***/ },
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"gv-highlight-holder\" id =\"standfirstHolder\"> \n               <p class=\"dig-standfirst\">\n                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo\n                    <a href=\"http://www.theguardian.com/politics/2015/jul/31/david-cameron-we-havent-wasted-a-day-since-election\">\n                        guided only by the 'good book'\n                    </a> \n                    <b><a href=\"http://www.theguardian.com/profile/andrewsparrow\">Andrew Sparrow</a></b>\n                    neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt\n                </p> \n            <div>\n        </div>\n    </div>\n</div>\n\n\n\n "
+	module.exports = "<div class=\"l-side-margins\" id=\"pageTop\">\n\t<!-- <pageHeader/> -->\n\n    <filterFeature/>\n    \n\t<filters/>\n\n\n\n<div class=\"gv-wrapper\">\n    \n\t<backToTop />\n\t<metaContainer />\n    <subView />\n\n\n    \n</div>\n\n</div>\n"
 
 /***/ },
 /* 12 */
@@ -19678,7 +19793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 	
 	function onrender() {
-		console.log('Rendering pageFilterfeature');
+		console.log('Rendering pageHeader');
 	}
 	
 	module.exports = Ractive.extend({
@@ -19692,7 +19807,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\" style=\"color:white;\" id=\"gvPageSectionHead\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                <h1 id=\"gvPageHead\"> </h1>\n               \n\n           \n\n\t\n            \t\n\n            \n\t\t</div> \n    </div>\n</div>\n</div>    "
+	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub gv-showTablet\"> </h2> \n        <div class=\"dig-slice__inner__main\">\n            <div class=\"gv-highlight-holder\" id =\"standfirstHolder\"> \n               <p class=\"dig-standfirst\">\n                    \n                </p> \n            <div>\n        </div>\n    </div>\n</div>\n\n\n\n "
 
 /***/ },
 /* 14 */
@@ -19701,7 +19816,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 	
 	function onrender() {
-		console.log('Rendering fixedFilters');
+		console.log('Rendering pageFilterfeature');
 	}
 	
 	module.exports = Ractive.extend({
@@ -19715,7 +19830,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"fixed-filters-outer hiding\" id=\"fixedFiltersDIV\">\n\n<div class=\"dig-slice dig-slice--filters js-top\" id=\"fixedFiltersBG\">\n    <div class=\"dig-slice__inner gv-hideMobile\"  id=\"fixedFilters\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n                   \n                {{#each sectionIds:count}} \n                    <li class=\"dig-filters__filter\"> \n                    <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n                        <span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n                            <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n                        <span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n                    </li>\n                {{/each}}    \n\n            </ul>\n        </div>\n    </div>\n</div>\n\n</div>\n\n\n\n\n\n\n\n "
+	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\" style=\"color:white;\" id=\"gvPageSectionHead\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                <h1 id=\"gvPageHead\"> </h1>\n               \n\n           \n\n\t\n            \t\n\n            \n\t\t</div> \n    </div>\n</div>\n</div>    "
 
 /***/ },
 /* 16 */
@@ -19724,7 +19839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 	
 	function onrender() {
-		console.log('Rendering subview');
+		console.log('Rendering fixedFilters');
 	}
 	
 	module.exports = Ractive.extend({
@@ -19738,7 +19853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\t\t<a name=\"row_0\"></a> \n\t\t{{#each entries:count}} \n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<!-- <td>\n\t\t\t\t<div style=\"height:60px; width:60px; floatt:left; background: url('{{ authorImagePath }}'); background-size: cover; background-repeat:no-repeat; border-radius:50%;\"></div>\n\t\t\t</td> -->\n\t\t\t\t<td class=\"entry-head\">\n\t\t\t\t\t<div class=\"gv-portrait-holder\" style=\"height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;\"> </div>\n\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<a href=\"#row_{{ count+1 }}\" style=\"color:{{ bandInfo.colorBand }}; font-size:48px\">{{ title }} </a>\n\t\t\t\t\t\t<br/><span class=\"entry-subhead\"  style=\"font-size:15px; float:left;\">{{ subHeader }}</span>\n\t\t\t\t\t</div>\t\n\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t\n\n\t\t\t<tr class=\"entry-detail-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t\n\t\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t\t\t\t\t<!-- <div class=\"gv-image-holder\" style=\"background: url('{{ imgPath }}') no-repeat; background-size: cover;\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"gv-portrait-holder\"  style=\"height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;\"> \n\n\t\t\t\t\t\t\t\t\t\t\t\t</div>-->\n\n\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"gv-img-holder-no-bg\"><img src=\"{{imgPath}}\" alt=\"\" class=\"gv-image-book-cover\"/></div>\n\t\t\t\t\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t\t\t\t<div class=\"gv-desc-holder\">\n\t\t\t\t\t\t\t\t<p>{{ text }}</p>\n\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"gv-item-social-holder\">\n\t\t\t\t\t\t\t\t\t<p class=\"dig-share-container\">\n\t\t\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"facebook\" id=\"fb_{{ count }}\"></button>\n\t\t\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"twitter\"  id=\"tw_{{ count }}\"></button>\n\t\t\t\t\t\t                <button class=\"dig-share js-share-detail\" data-network=\"email\"  id=\"em_{{ count }}\"></button>\n\t\t\t\t\t            \t</p>\n\t\t\t\t\t            </div>\n\n\t\t\t\t\t\t<div class=\"mobile-back-top\">\n\t\t\t\t\t\t\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\t\t\t\n\n\t\t\t\t\t\t\t<a class=\"backToTop\">Back To Top</a>\n\n\t\t\t\t\t</td>\t\n\t\t\t</tr>\t\n\n\t\t\t<tr class=\"entry-seperator\">\n\t\t\t\t\n\t\t\t\t<td class=\"entry-seperator\" style=\"padding:{{ bandInfo.typeSize / 4 }}em\"></td>\n\t\t\t</tr>\t\n\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
+	module.exports = "<div class=\"fixed-filters-outer hiding\" id=\"fixedFiltersDIV\">\n\n<div class=\"dig-slice dig-slice--filters js-top\" id=\"fixedFiltersBG\">\n    <div class=\"dig-slice__inner gv-hideMobile\"  id=\"fixedFilters\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n                   \n                {{#each sectionIds:count}} \n                    <li class=\"dig-filters__filter\"> \n                    <a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"1\"> \n                        <span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n                            <svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n                        <span class=\"dig-filters__filter__link__text\">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>\n                    </li>\n                {{/each}}    \n\n            </ul>\n        </div>\n    </div>\n</div>\n\n</div>\n\n\n\n\n\n\n\n "
 
 /***/ },
 /* 18 */
@@ -19747,7 +19862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ractive = __webpack_require__(1);
 	
 	function onrender() {
-		console.log('Rendering backToTop');
+		console.log('Rendering metaContainer');
 	}
 	
 	module.exports = Ractive.extend({
@@ -19759,6 +19874,52 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 19 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"dig-slice__inner dig-meta-container__inner\">\n\n\n\n        <div class=\"dig-slice__inner__main dig-meta-container__inner__main dig-hide-leftCol\">\n                <p class=\"dig-slice__inner dig-date dig-global-date-container\" style=\"padding-left: 0px\" id=\"globalDateContainer\">\n                     \n                </p>\n        </div>\n        <div class=\"dig-slice__inner__left  dig-meta-container__inner__left  dig-show-leftCol\">\n\n                <p class=\"dig-share-container\">\n                  <!--   <button class=\"dig-share js-share\" data-network=\"facebook\"></button>\n                    <button class=\"dig-share js-share\" data-network=\"twitter\"></button>\n                    <button class=\"dig-share js-share\" data-network=\"email\"></button> -->\n                </p> \n        </div>\n        <div class=\"dig-slice__inner__left  dig-meta-container__inner__right\">\n\n                <span class=\"dig-share-container\">\n                    <button class=\"dig-share js-share\"id=\"jsGlobalFb\" data-network=\"facebook\"></button>\n                    <button class=\"dig-share js-share\"id=\"jsGlobalTwitter\" data-network=\"twitter\"></button>\n                    <button class=\"dig-share js-share\" id=\"jsGlobalEmail\" data-network=\"email\"></button>\n                </span> \n            </div>\n         <div class=\"dig-slice__inner__main dig-meta-container__inner__main dig-show-leftCol\">\n                <p class=\"dig-slice__inner dig-date dig-global-date-container\" style=\"padding-left: 0px\" id=\"globalDateContainer\">\n                     date is here\n                </p>\n        </div>\n\n        <div class=\"dig-meta-container__line\">\n\n        </div>\n\n\n</div>\n            \n  "
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Ractive = __webpack_require__(1);
+	
+	function onrender() {
+		console.log('Rendering subview');
+	}
+	
+	module.exports = Ractive.extend({
+	  		isolated: false,
+		  	onrender: onrender,
+	  		template: __webpack_require__(21)
+	});
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	module.exports = "<table class=\"gv-table\">\n\t<!-- <thead>\n\t\t<tr>\n\t\t\t<th>Title</th>\n\t\t\t<th>Release</th>\n\t\t</tr>\n\t</thead> -->\n\t\n\t<tbody>\n\t\t<a name=\"row_0\"></a> \n\t\t{{#each entries:count}} \n\t\t\t<tr class=\"entry-main-row\" id=\"row_{{ count+1 }}\">\n\t\t\t\t<!-- <td>\n\t\t\t\t<div style=\"height:60px; width:60px; floatt:left; background: url('{{ authorImagePath }}'); background-size: cover; background-repeat:no-repeat; border-radius:50%;\"></div>\n\t\t\t</td> -->\n\t\t\t\t<td class=\"entry-head\">\n\t\t\t\t\t<div class=\"gv-portrait-holder\" style=\"background: url('{{ authorImagePath }}') no-repeat; background-size: cover;\"> </div>\n\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<a href=\"#row_{{ count+1 }}\" class=\"gv-book-item-head\" style=\"color:{{ bandInfo.colorBand }};\">{{ title }} </a>\n\t\t\t\t\t\t<br/><span class=\"entry-subhead\"  style=\"font-size:15px; float:left;\">{{ subHeader }}</span>\n\t\t\t\t\t</div>\t\n\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t\n\n\t\t\t<tr class=\"entry-detail-row\" id=\"EntryDetail_{{ count }}\">\n\t\t\t\t\n\t\t\t\t\t<td class=\"entry-detail\">\n\t\t\t\t\t\t\t\t\t\t{{#if (imgPath!=='')}}\n\t\t\t\t\t\t\t\t\t\t\t\t<!-- <div class=\"gv-image-holder\" style=\"background: url('{{ imgPath }}') no-repeat; background-size: cover;\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"gv-portrait-holder\"  style=\"height:60px; width:60px; background: url('{{ authorImagePath }}') no-repeat; background-size: cover;\"> \n\n\t\t\t\t\t\t\t\t\t\t\t\t</div>-->\n\n\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"gv-img-holder-no-bg\"><img src=\"{{imgPath}}\" alt=\"\" class=\"gv-image-book-cover\"/></div>\n\t\t\t\t\t\t\t\t\t\t{{ /if }}\n\t\t\t\t\t\t\t\t<div class=\"gv-desc-holder\">\n\t\t\t\t\t\t\t\t<!--  triple tash to render as html -->\n\t\t\t\t\t\t\t\t<p>{{{ text }}}</p>\n\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t<div class=\"gv-item-social-holder\">\n\n\n\t\t\t\t\t\t\t\t\t<p class=\"dig-share-container\">\n\n\t\t\t\t\t\t\t\t\t\t{{#if (buyBookLink)}}\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"gv-buy-book-button\" id=\"buyBtn_{{ count }}\">buy the book\n\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"gv-right-button-arrow\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\" viewBox=\"0 0 30 30\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path d=\"M22.8 14.6L15.2 7l-.7.7 5.5 6.6H6v1.5h14l-5.5 6.6.7.7 7.6-7.6v-.9\"></path>\n\t\t\t\t\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t{{ /if }}\n\n\t\t\t\t\t\t\t\t\t\t<span class=\"dig-share-float-span\">\n\t\t\t\t\t\t\t                <button class=\"dig-share atom-share\" data-hierarchy=\"sub-facebook\" data-network=\"facebook\" id=\"fb_{{ count }}\"></button>\n\t\t\t\t\t\t\t                <button class=\"dig-share atom-share\" data-hierarchy=\"sub-twitter\"  data-network=\"twitter\"  id=\"tw_{{ count }}\"></button>\n\t\t\t\t\t\t\t                <button class=\"dig-share atom-share\"  data-hierarchy=\"sub-email\" data-network=\"email\"  id=\"em_{{ count }}\"></button>\n\t\t\t\t\t\t            \t</span>\n\t\t\t\t\t\t                \n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t            \t</p>\n\n\t\t\t\t\t            </div>\n\n\t\t\t\t\t\t<div class=\"mobile-back-top\">\n\t\t\t\t\t\t\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\t\t\t\n\n\t\t\t\t\t\t\t<a class=\"backToTop\">Back To Top</a>\n\n\t\t\t\t\t</td>\t\n\t\t\t</tr>\t\n\n\t\t\t<tr class=\"entry-seperator\">\n\t\t\t\t\n\t\t\t\t<td class=\"entry-seperator\" style=\"padding:{{ bandInfo.typeSize / 4 }}em\"></td>\n\t\t\t</tr>\t\n\n\t\t{{/each}}\n\n\t</tbody>\n\t\n</table>"
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Ractive = __webpack_require__(1);
+	
+	function onrender() {
+		console.log('Rendering backToTop');
+	}
+	
+	module.exports = Ractive.extend({
+	  		isolated: false,
+		  	onrender: onrender,
+	  		template: __webpack_require__(23)
+	});
+
+
+/***/ },
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"dig-slice hiding\" id=\"backToTop\">\n<div class=\"dig-slice__back-to-top  gv-hideMobile\">\n\n\t<div class=\"dig-slice__inner__left\">\n\t\n\t\t\t<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"14\">\n\t\t\t\t<path fill=\"currentColor\" d=\"M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z\"></path></svg> \n\n\n\t\t<a class=\"backToTop\">Back to top</a>\n\t</div>\n</div>\n\n</div>\n"

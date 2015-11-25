@@ -9,6 +9,8 @@ var Ractive = require('ractive');
 var getJSON = require('./js/utils/getjson');
 var _ = require('underscore')
 var share  = require('./js/components/share');
+var formatGuardianDate = require('./js/components/formatGuardianDate');
+var globalShare  = require('./js/components/globalShare');
 var scrollTo  = require('./js/utils/scroll-to');
 var detect = require('./js/utils/detect');
 var getDataAltVariable = require('./js/utils/getDataAltVariable');
@@ -29,8 +31,13 @@ var sectionTitles = {
 };
 
 var requiredSections;
+var publishedDate;
 
 function boot(el) {
+
+	//set some globals 
+
+    publishedDate = formatGuardianDate();
 
 	var app = new Ractive({
 		el: el,
@@ -42,6 +49,7 @@ function boot(el) {
 			filters: require('./js/filters'),
 			filterFeature: require('./js/filterFeature'),
 			fixedFilters: require('./js/fixedFilters'),
+			metaContainer: require('./js/metaContainer'),
 			subView: require('./js/subView'),
 			backToTop:  require('./js/backToTop')
 		},
@@ -54,7 +62,7 @@ function boot(el) {
 			app.set('copyEntries', copyData);
 			sliceGlobalArrays();
 			app.set('sectionIds', sectionIds);
-			iframeMessenger.enableAutoResize();
+			//iframeMessenger.enableAutoResize();
 			buildView();
 			addListeners();
 			
@@ -114,6 +122,9 @@ function boot(el) {
 
         });
 
+        var a = document.getElementsByClassName('dig-global-date-container');
+        [].forEach.call(a, function (item) {  item.innerHTML = publishedDate;});
+
 }
 
 
@@ -143,7 +154,6 @@ function getSubTitleHTML(item){
 					}
 
 					if (item.Type == "Standfirst"){
-						
 						document.getElementById("standfirstHolder").innerHTML = item.Copy;
 					}
 				})
@@ -383,13 +393,27 @@ function getSubTitleHTML(item){
 	        	});
 	       });
 
+		 var buyButton = document.getElementsByClassName("gv-buy-book-button");
+
+		  _.each(buyButton, function(item) {
+		  	document.getElementById(item.id).addEventListener("click", function(evt) { 
+		  		evt.preventDefault();
+		  		var i = item.id;
+	        	var a = i.split("_");
+	        	var d = dataset[parseInt(a[1])]
+
+
+	        	window.open(d.buyBookLink, "_blank");
+	        	});
+		  });
+
 		addScrollListener(); -2
 		addSocialListeners(); 
 		addNavListeners();
 
 	}
 
-	
+
 
 	function addNavListeners(){
 
@@ -419,20 +443,50 @@ function getSubTitleHTML(item){
 	}
 
 	function addSocialListeners(){
-		var socialDetail = document.getElementsByClassName("js-share-detail");
+		var socialDetail = document.getElementsByClassName("atom-share");
 
 		_.each(socialDetail, function(item) {
 	        	document.getElementById(item.id).addEventListener("click", function() {  socialDetailClick(this); });
 	       }); 
+
+		var socialGlobal = document.getElementsByClassName("js-share");
+
+		_.each(socialGlobal, function(item) {
+				document.getElementById(item.id).addEventListener("click", function() {  socialGlobalClick(this); });
+	       }); 
+
+
+
 	}
 
 	function socialDetailClick(shareEl) { 
-		 var a = shareEl.id;
-		 var network = shareEl.getAttribute('data-network');
-	     var b = a.split("_");
-
+		var titleStr;
+		var a = shareEl.id;
+		var network = shareEl.getAttribute('data-network');
+	    var b = a.split("_");
+			_.each(copyData, function(item,i){
+					if (item.Type == "PageHeader"){
+							titleStr = String(item.Title);
+					}
+			})
 	     n = b[1];
-	     share(network, pageTitle, dataset[n]);
+	     
+	     share(network, titleStr, dataset[n]);
+	}
+
+	function socialGlobalClick(shareEl) { 
+		var titleStr;
+
+		var network = shareEl.getAttribute('data-network');
+
+			_.each(copyData, function(item,i){
+					if (item.Type == "PageHeader"){
+							titleStr = String(item.Title);
+					}
+			})
+
+	     
+	     globalShare(network, titleStr);
 	}
 
 	function rowClick(a) { 

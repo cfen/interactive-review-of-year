@@ -1,6 +1,5 @@
-
 var shareURL = setShortURL();// TODO: short url
-var hashTag = '#100GuardianReviewOfYear';
+var hashTag = '#GuardianReviewOfTheYear';
 
 const twitterBaseUrl = 'https://twitter.com/intent/tweet?text=';
 const facebookBaseUrl = 'https://www.facebook.com/sharer/sharer.php?ref=responsive&u=';
@@ -14,23 +13,19 @@ function setShortURL(){
 	return v;
 }
 
+function globalShare(network, pageTitle) {
 
-function share(network, pageTitle, data) {
-
-		var numStr = data.number;
-		var headStr = data.title
-
-	    var twitterMessage = "@guardian "+decodeURIComponent(pageTitle)+" "+headStr;
+	var twitterMessage = decodeURIComponent(pageTitle)+" @guardian ";
 	    var shareWindow;
 
 	    if (network === 'twitter') {
-	        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL + "#row_" +numStr;
+	        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL;
 	    } else if (network === 'facebook') {
 	        shareWindow = facebookBaseUrl + shareURL;
 	    } else if (network === 'email') {
-	        shareWindow = 'mailto:?subject=' + encodeURIComponent(pageTitle) + '&body=' + shareURL+ "#row_" +numStr;
+	        shareWindow = 'mailto:?subject=' + encodeURIComponent(pageTitle) + '&body=' + shareURL;
 	    } else if (network === 'google') {
-	        shareWindow = googleBaseUrl + shareURL+ "#row_" +numStr;
+	        shareWindow = googleBaseUrl + shareURL;
 	    }
 	
 	//console.log(data)
@@ -41,4 +36,4 @@ function share(network, pageTitle, data) {
 
 
 
-module.exports = share;
+module.exports = globalShare;
