@@ -7,7 +7,7 @@
 	</thead> -->
 	
 	<tbody>
-		<a name="row_0"></a> 
+		
 		{{#each entries:count}} 
 			<tr class="entry-main-row" id="row_{{ count+1 }}">
 				<!-- <td>
@@ -16,9 +16,9 @@
 				<td class="entry-head">
 					<div class="gv-portrait-holder" style="background: url('{{ authorImagePath }}') no-repeat; background-size: cover;"> </div>
 
-					<div>
-						<a href="#row_{{ count+1 }}" class="gv-book-item-head" style="color:{{ bandInfo.colorBand }};">{{ title }} </a>
-						<br/><span class="entry-subhead"  style="font-size:15px; float:left;">{{ subHeader }}</span>
+					<div class="gv-el-header-holder">
+						<a href="#row_{{ count+1 }}" class="gv-book-item-head" style="color:{{ bandInfo.colorBand }};">{{{ title }}} </a>
+						<br/><p class="entry-subhead">{{{ subHeader }}}</p>
 					</div>	
 
 				</td>

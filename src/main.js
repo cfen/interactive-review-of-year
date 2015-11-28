@@ -101,7 +101,8 @@ function boot(el) {
 	}
 
 	function setPageFurniture(arr){
-        arr.forEach(item=>{
+        _.each(arr, function(item,i){
+
             if(item.Type === 'PageHeader'){
                   globalTitle = item.Title;
                   document.getElementById("gvPageHead").innerHTML = item.Title;
@@ -156,11 +157,7 @@ function getSubTitleHTML(item){
 					if (item.Type == "Standfirst"){
 						document.getElementById("standfirstHolder").innerHTML = item.Copy;
 					}
-				})
-				
-				
-				
-				
+				});			
 	}	
 
 	function setBaseColor(copyData){
@@ -178,7 +175,7 @@ function getSubTitleHTML(item){
 						if (v == "sport"){ c = "#1C4A00"}
 					}
 				
-				})
+				});
 
 				return c;
 						
@@ -208,7 +205,7 @@ function getSubTitleHTML(item){
 						_.each(rawData, function(item, i){
 							item.displaycount = i+1;
 							item.rankResize = ((rawData.length + 1 ) - item.number);
-							item.bandInfo = getBandInfo(item.number, rawData.length);
+							item.bandInfo = {typeSize: 1,colorBand:baseColor};
 							item.numSize = (item.typeSize * 0.75);
 							item.imgPath = item.imagePath;
 							item.socialTwitter = encodeURIComponent("Guardian review "+item.number+" "+item.title)
@@ -216,7 +213,7 @@ function getSubTitleHTML(item){
 							topPosTemp += item.lineH;
 							item.positioner = topPosTemp;
 							item.imageBoolean = item.imgPath === "";
-						})
+						});
 
 				//rawData.reverse();
 				return rawData;
@@ -326,21 +323,21 @@ function getSubTitleHTML(item){
 		var maxSteps = n + 1;
 
 		var typeSizeStep = 0.25; //0.25
-			typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
+			typeSizeRange = _.range (1, maxSteps/2, 0.5); //typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
 			typeSizeRange.reverse();
 
 		var multiplier = (maxN + 1)-n;	
 
 		return {
 			typeSize:(multiplier*typeSizeStep)+1,
-			colorBand:ColorLuminance(baseColor, (maxN-n)*baseLum)
+			colorBand:baseColor
+			//colorBand:ColorLuminance(baseColor, (maxN-n)*baseLum)
 		}
 
 	}
 	
 
-	function getBandNumber(max){
-		//max=31;
+	function getBandNumber(max){		//max=31;
 		if (max > 11){
 			return 2;
 		}
@@ -377,21 +374,21 @@ function getSubTitleHTML(item){
 
 
 	function addListeners(){
-		var clickCell = document.getElementsByClassName("entry-main-row");
-		 _.each(clickCell, function(item) {
-	        	document.getElementById(item.id).addEventListener("click", function(evt) {  
-	        		rowClick(this.id); 
-	        		evt.preventDefault();
+		// var clickCell = document.getElementsByClassName("entry-main-row");
+		//  _.each(clickCell, function(item) {
+	 //        	document.getElementById(item.id).addEventListener("click", function(evt) {  
+	 //        		rowClick(this.id); 
+	 //        		evt.preventDefault();
 
-	        		var i = this.id;
-	        		var a = i.split("_")
-	        		var n = (Math.floor(a[1]-1));
-		            evt.preventDefault();
-		            scrollTo(document.getElementById("row_" + n));
-		            //scrollTo(document.getElementById(this.id));
+	 //        		var i = this.id;
+	 //        		var a = i.split("_")
+	 //        		var n = (Math.floor(a[1]-1));
+		//             evt.preventDefault();
+		//             scrollTo(document.getElementById("row_" + n));
+		//             //scrollTo(document.getElementById(this.id));
 
-	        	});
-	       });
+	 //        	});
+	 //       });
 
 		 var buyButton = document.getElementsByClassName("gv-buy-book-button");
 
@@ -407,7 +404,7 @@ function getSubTitleHTML(item){
 	        	});
 		  });
 
-		addScrollListener(); -2
+		//addScrollListener();
 		addSocialListeners(); 
 		addNavListeners();
 

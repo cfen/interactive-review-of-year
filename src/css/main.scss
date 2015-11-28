@@ -121,11 +121,9 @@ a, a:hover, a:active {
     border-spacing: 0;
     margin:0 $gs-gutter/2;
 
-    // @include mq(tablet) {
-    //     margin:0 $gs-gutter;
-    //     max-width: gs-span(8);
-    //     // font-size: 14px;
-    // }
+    @include mq(tablet) {
+        
+    }
 
     @include mq(mobileLandscape){
         max-width:gs-span(6);
@@ -166,10 +164,23 @@ a, a:hover, a:active {
         }
 
         .entry-subhead{
+            margin: 0;
             color:rgba($neutral-1,0.8);
             font-family: "Guardian Egyptian Web", Sans;
             font-weight:500;
-            font-size: 0.6em;
+            font-size: 1.2em;
+            max-width:gs-span(4);
+
+            @include mq(tablet){
+                font-size: 1.4em;
+                line-height:1.3em;
+                max-width:gs-span(8);
+            }
+
+            @include mq(desktop){
+                font-size: 0.6em;
+                max-width:gs-span(8);
+            }
         }
 
         .entry-detail{
@@ -178,13 +189,13 @@ a, a:hover, a:active {
             // font-size: 1.2em;
             // line-height:1.5em;
             padding-bottom: $gs-baseline;
-            @include mq(tablet) {
-                    // font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
-                    // font-size: 1.5em;
-                    // line-height:1.8em;
-                    padding-bottom: gs-height(1);
+            // @include mq(tablet) {
+            //         // font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
+            //         // font-size: 1.5em;
+            //         // line-height:1.8em;
+            //         padding-bottom: gs-height(1);
                     
-                }
+            //     }
         }
 
         .entry-seperator{
@@ -244,6 +255,14 @@ a, a:hover, a:active {
 .gv-img-holder-no-bg{
     float:left;
     margin-right:$gs-gutter;
+}
+
+.gv-el-header-holder{
+    margin:0;
+    include mq(leftCol){
+       margin-bottom: $gs-baseline; 
+    }
+    
 }
 
 .gv-portrait-holder{
@@ -314,7 +333,7 @@ a, a:hover, a:active {
     text-overflow: ellipsis;
     vertical-align: top;
     white-space: nowrap;
-    width: gs-span(2);
+    width: gs-span(2) - $gs-gutter;
 }
 
 .gv-right-button-arrow{
