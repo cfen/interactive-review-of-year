@@ -2,7 +2,6 @@
 .dig-slice__inner__graphic{
     
     font: "Guardian Egyptian Web", serif;
-    font-size: 1.4em;
     color: white;
     line-height:1.5em;
 
@@ -20,11 +19,16 @@
 .dig-slice__inner__graphic h1{
 	font-family: "Guardian Egyptian Web", serif; 
 	font-weight:200;
-    font-size: 3em;
-    line-height:1em;
+
+    line-height:1.2em;
     margin:0;
     color: white;
-    padding-bottom: gs-height(1);
+    padding-bottom:gs-baseline;
+
+    @include mq(tablet){
+        font-size: 3.2em;
+        max-width:gs-span(8);
+    }
     
 }
 

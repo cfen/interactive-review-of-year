@@ -12,7 +12,6 @@ var share  = require('./js/components/share');
 var scrollTo  = require('./js/utils/scroll-to');
 var detect = require('./js/utils/detect');
 var getDataAltVariable = require('./js/utils/getDataAltVariable');
-var iframeMessenger = require('./js/utils/iframeMessenger');
 
 var sectionIds = ['A', 'B', 'C', 'D', 'E', 'F','G','H','I','J'];
 var sectionTitles = {
@@ -54,7 +53,6 @@ function boot(el) {
 			app.set('copyEntries', copyData);
 			sliceGlobalArrays();
 			app.set('sectionIds', sectionIds);
-			iframeMessenger.enableAutoResize();
 			buildView();
 			addListeners();
 			
@@ -124,10 +122,10 @@ function getSubTitleHTML(item){
 }
 
 	function setColorScheme(){
-			document.getElementById("filterArea").style.background = baseColor;
-			document.getElementById("filterAreaBG").style.background = baseColor;
-			document.getElementById("fixedFilters").style.background = baseColor;
-			document.getElementById("fixedFiltersBG").style.background = baseColor;
+			// document.getElementById("filterArea").style.background = baseColor;
+			// document.getElementById("filterAreaBG").style.background = baseColor;
+			// document.getElementById("fixedFilters").style.background = baseColor;
+			// document.getElementById("fixedFiltersBG").style.background = baseColor;
 			document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
 			document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 
@@ -318,19 +316,37 @@ function getSubTitleHTML(item){
 		var maxN = Math.ceil((max/bandNum));
 		var maxSteps = n + 1;
 
-		var typeSizeStep = 0.25; //0.25
+		var typeSizeStep = setTypeSizeStep(maxSteps);
 			typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
 			typeSizeRange.reverse();
 
 		var multiplier = (maxN + 1)-n;	
 
 		return {
-			typeSize:(multiplier*typeSizeStep)+1,
+			typeSize:(multiplier*typeSizeStep),
 			colorBand:ColorLuminance(baseColor, (maxN-n)*baseLum)
 		}
 
 	}
 	
+	function setTypeSizeStep(n){
+
+
+		if (n > 11){
+			return 0.25;
+		}
+		if (n > 30){
+			return 0.4;
+		}
+		if (n > 50){
+			return 0.25;
+		}
+
+		
+
+		return 0.25
+	}
+
 
 	function getBandNumber(max){
 		//max=31;

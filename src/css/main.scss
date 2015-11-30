@@ -101,17 +101,24 @@ a, a:hover, a:active {
     margin: 0;
 }
 
+gv-desc-holder{
+    max-width:280px;
+    @include mq(tablet){
+        max-width:gs-span(8);
+    }
+}
 
 
 .gv-table{
     margin:$gs-baseline ($gs-gutter/2);
-    max-width: gs-span(8);
+    max-width: gs-span(4) - $gs-gutter;
     // font-size: 12px;
     border-collapse: collapse; 
     border-spacing: 0;
 
     @include mq(tablet) {
         margin:$gs-baseline $gs-gutter $gs-baseline $gs-gutter;
+        max-width: gs-span(8);
         // font-size: 14px;
     }
 
@@ -133,7 +140,7 @@ a, a:hover, a:active {
             cursor:pointer;
             font-size: 12px;
             @include mq(desktop) {
-                font-size: 26px;
+                font-size: 1.2em;
             }
         }
 
