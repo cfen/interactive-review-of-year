@@ -8,12 +8,12 @@
                    
                 {{#each sectionIds:count}} 
                     <li class="dig-filters__filter"> 
-                    <a class="dig-filters__filter__link js-filter" href="#" data-section="1"> 
+                    <a class="dig-filters__filter__link js-filter" href="#" data-section="{{ ((count)*10) }}"> 
                         <span class="dig-filters__filter__link__circle showing-mobile-only"> 
                             <svg class="hp-summary__toggle__icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="currentColor" d="m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z"></path></svg> 
                         </span> 
 
-                        <span class="dig-filters__filter__link__text">{{ count+1 }} to {{ (count+1)*10 }}</span> </a>
+                        <span class="dig-filters__filter__link__text">{{ ((count+1)*10)-9 }}–{{ (count+1)*10 }}</span> </a>
                     </li>
                 {{/each}}    
 

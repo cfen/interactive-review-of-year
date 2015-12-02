@@ -122,10 +122,10 @@ function getSubTitleHTML(item){
 }
 
 	function setColorScheme(){
-			// document.getElementById("filterArea").style.background = baseColor;
-			// document.getElementById("filterAreaBG").style.background = baseColor;
-			// document.getElementById("fixedFilters").style.background = baseColor;
-			// document.getElementById("fixedFiltersBG").style.background = baseColor;
+			document.getElementById("filterArea").style.background = baseColor;
+			document.getElementById("filterAreaBG").style.background = baseColor;
+			document.getElementById("fixedFilters").style.background = baseColor;
+			document.getElementById("fixedFiltersBG").style.background = baseColor;
 			document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
 			document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
 
@@ -312,19 +312,18 @@ function getSubTitleHTML(item){
 
 		var bandNum = getBandNumber(max)
 
-		var n = Math.ceil((a/bandNum));
+		var n = Math.ceil((a/10));
 		var maxN = Math.ceil((max/bandNum));
 		var maxSteps = n + 1;
-
 		var typeSizeStep = setTypeSizeStep(maxSteps);
-			typeSizeRange = _.range (1, maxSteps/2, 0.5); // (min val, max val, step)
+			typeSizeRange = _.range (1, 4.25, 0.25); // (min val, max val, step)
 			typeSizeRange.reverse();
 
 		var multiplier = (maxN + 1)-n;	
 
 		return {
-			typeSize:(multiplier*typeSizeStep),
-			colorBand:ColorLuminance(baseColor, (maxN-n)*baseLum)
+			typeSize:(typeSizeRange[n-1]),
+			colorBand:ColorLuminance(baseColor, (max-a)*0.025)
 		}
 
 	}
@@ -336,15 +335,15 @@ function getSubTitleHTML(item){
 			return 0.25;
 		}
 		if (n > 30){
-			return 0.4;
+			return 0.1;
 		}
 		if (n > 50){
-			return 0.25;
+			return 0.1;
 		}
 
 		
 
-		return 0.25
+		return 2
 	}
 
 
@@ -402,7 +401,7 @@ function getSubTitleHTML(item){
 	        	});
 	       });
 
-		addScrollListener(); -2
+		addScrollListener(); 
 		addSocialListeners(); 
 		addNavListeners();
 
@@ -417,8 +416,14 @@ function getSubTitleHTML(item){
 		 _.each(filterEl, function(item) {
 	        	item.addEventListener('click', function(evt) {
 	        		var sectionId = item.getAttribute('data-section');
+
 		            evt.preventDefault();
-		            scrollTo(document.getElementById("row_" + (sectionId-2)));
+		            scrollTo(document.getElementById("row_" + (sectionId)));
+		            console.log(("row_" + (sectionId)));
+
+
+
+
 		        });
 	       });
 
