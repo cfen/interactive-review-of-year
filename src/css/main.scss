@@ -32,7 +32,7 @@ $guardian-brand-dark: map-get($pasteup-palette, 'guardian-brand-dark');
 $maps-support-3: map-get($pasteup-palette, 'maps-support-3');
 
 
-//Component css
+//Component css 
 @import 'pageHeader';
 @import 'filters';
 @import 'filterFeature';
@@ -51,8 +51,7 @@ body {
 
 figure.element {
     margin-top: 0 !important;
-    margin-bottom: 0.75rem;
-    position: relative;
+
 }
 
 //general
