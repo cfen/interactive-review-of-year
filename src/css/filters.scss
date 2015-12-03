@@ -14,13 +14,15 @@ $day-spacing: 20px;
 
     @each $bp in (tablet, desktop, leftCol, wide) {
         @include mq($bp) {
+            padding:  $gs-baseline $gs-gutter;
             max-width: map-get($mq-breakpoints, $bp);
         }
     }
 
-    .dig-slice--standfirst & {
+.dig-slice--standfirst & {
         margin-top: -10px;
         @include mq(mobileLandscape) {
+
             margin-top: -20px;
         }
         
@@ -30,9 +32,9 @@ $day-spacing: 20px;
     }
 
     .dig-slice--filters & {
-        background-color: #94bfdd;
+        background-color: none;
         @include mq(mobileLandscape) {
-            padding-bottom: 5px;
+            
         }
     }
 }

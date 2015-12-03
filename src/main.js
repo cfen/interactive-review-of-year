@@ -59,7 +59,7 @@ function boot(el) {
 		}
 	});
 
-	var key = getDataAltVariable();//'"';
+	var key = getDataAltVariable();
 	var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
 
 	var baseLum = 0.075;
@@ -122,8 +122,8 @@ function getSubTitleHTML(item){
 }
 
 	function setColorScheme(){
-			//document.getElementById("filterArea").style.background = baseColor;
-			//document.getElementById("filterAreaBG").style.background = baseColor;
+			document.getElementById("filterArea").style.background = baseColor;
+			document.getElementById("filterAreaBG").style.background = baseColor;
 			//document.getElementById("fixedFilters").style.background = baseColor;
 			//document.getElementById("fixedFiltersBG").style.background = baseColor;
 			document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
@@ -316,7 +316,7 @@ function getSubTitleHTML(item){
 		var maxN = Math.ceil((max/bandNum));
 		var maxSteps = n + 1;
 		var typeSizeStep = setTypeSizeStep(maxSteps);
-			typeSizeRange = _.range (1, 4.25, 0.25); // (min val, max val, step)
+			typeSizeRange = _.range (0.6, 3.6, 0.2); // (min val, max val, step)
 			typeSizeRange.reverse();
 
 		var multiplier = (maxN + 1)-n;	

@@ -115,7 +115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		});
 
-		var key = getDataAltVariable();//'"';
+		var key = getDataAltVariable();
 		var url = "https://interactive.guim.co.uk/docsdata/"  + key + ".json";
 
 		var baseLum = 0.075;
@@ -178,8 +178,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 		function setColorScheme(){
-				//document.getElementById("filterArea").style.background = baseColor;
-				//document.getElementById("filterAreaBG").style.background = baseColor;
+				document.getElementById("filterArea").style.background = baseColor;
+				document.getElementById("filterAreaBG").style.background = baseColor;
 				//document.getElementById("fixedFilters").style.background = baseColor;
 				//document.getElementById("fixedFiltersBG").style.background = baseColor;
 				document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
@@ -372,7 +372,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			var maxN = Math.ceil((max/bandNum));
 			var maxSteps = n + 1;
 			var typeSizeStep = setTypeSizeStep(maxSteps);
-				typeSizeRange = _.range (1, 4.25, 0.25); // (min val, max val, step)
+				typeSizeRange = _.range (0.6, 3.6, 0.2); // (min val, max val, step)
 				typeSizeRange.reverse();
 
 			var multiplier = (maxN + 1)-n;	
@@ -19237,7 +19237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"l-side-margins\" id=\"pageTop\">\n\t<!-- <pageHeader/> -->\n\n    <filterFeature/>\n    \n\t<!--<filters/>\n\t\n\t <fixedFilters/> -->\n\n\n\n<div class=\"gv-wrapper\">\n    \n\t<backToTop />\n\n    <subView />\n\n\n    \n</div>\n\n</div>\n"
+	module.exports = "<div class=\"l-side-margins\" id=\"pageTop\">\n\t<!-- <pageHeader/> -->\n\n    <filterFeature/>\n    \n\t<filters/>\n\t\n\t<!-- <fixedFilters/> -->\n\n\n\n<div class=\"gv-wrapper\">\n    \n\t<backToTop />\n\n    <subView />\n\n\n    \n</div>\n\n</div>\n"
 
 /***/ },
 /* 9 */
@@ -19260,7 +19260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\">Jump to …</h2>\n        <div class=\"dig-slice__inner__main\">\n            <ul class=\"dig-filters js-filters\">\n\n                {{#each sectionIds:count}} \n            \t\t<li class=\"dig-filters__filter\"> \n            \t\t<a class=\"dig-filters__filter__link js-filter\" href=\"#\" data-section=\"{{ ((count)*10) }}\"> \n            \t\t\t<span class=\"dig-filters__filter__link__circle showing-mobile-only\"> \n            \t\t\t\t<svg class=\"hp-summary__toggle__icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\"><path fill=\"currentColor\" d=\"m 21,15 -5.25,4.5 0,-11.5 -1.5,0 0,11.5 L 9,15 l -0.5,1 5.75,6 1.5,0 5.75,-6 -0.5,-1 0,0 z\"></path></svg> \n                        </span> \n\n            \t\t\t<span class=\"dig-filters__filter__link__text\">{{ ((count+1)*10)-9 }}–{{ (count+1)*10 }}</span> </a>\n            \t\t</li>\n                {{/each}}    \n\n            \t\t\n            \t</ul>\n        </div>\n    </div>\n</div>\n\n\n\n "
+	module.exports = "<div class=\"dig-slice dig-slice--filters js-top\" id=\"filterAreaBG\">\n    <div class=\"dig-slice__inner\"  id=\"filterArea\">\n        <h2 class=\"dig-slice__inner__left dig-section-title-sub\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"gv-highlight-holder\" id =\"standfirstHolder\">\n                    \n                <div>\n        </div>\n    </div>\n</div>\n\n\n\n "
 
 /***/ },
 /* 11 */
@@ -19283,7 +19283,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\" style=\"color:white;\" id=\"gvPageSectionHead\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                <h1 id=\"gvPageHead\"> </h1>\n               \n\n           \n\n\t\t\t\t<div class=\"gv-highlight-holder with-divider\" id =\"standfirstHolder\">\n            \t\t\n            \t<div>\n            \t\n\n            \n\t\t</div> \n    </div>\n</div>\n</div>    "
+	module.exports = "<div class=\"dig-slice dig-slice--inner\" id=\"featureAreaBG\">\n<div class=\"dig-slice__inner\" id=\"featureArea\">\n    <h2 class=\"dig-slice__inner__left dig-section-title\" style=\"color:white;\" id=\"gvPageSectionHead\"> </h2>\n        <div class=\"dig-slice__inner__main\">\n            <div class=\"dig-slice__inner__graphic\">\n                <h1 id=\"gvPageHead\"> </h1>\n               \n\n           \n\n\t\t\t\t\n            \t\n\n            \n\t\t</div> \n    </div>\n</div>\n</div>    "
 
 /***/ },
 /* 13 */
