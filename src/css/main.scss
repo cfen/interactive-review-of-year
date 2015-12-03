@@ -43,10 +43,16 @@ $maps-support-3: map-get($pasteup-palette, 'maps-support-3');
 
 // Setup page
 body {
-    margin: 0;
+    margin: 0 !important;
     padding: 0;
     -webkit-font-smoothing: antialiased;
 
+}
+
+figure.element {
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem;
+    position: relative;
 }
 
 //general
