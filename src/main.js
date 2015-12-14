@@ -135,10 +135,10 @@ function getSubTitleHTML(item){
 }
 
 	function setColorScheme(){
-			document.getElementById("filterArea").style.background = baseColor;
-			document.getElementById("filterAreaBG").style.background = baseColor;
-			document.getElementById("featureAreaBG").style.background = ColorLuminance(baseColor, baseLum);
-			document.getElementById("featureArea").style.background = ColorLuminance(baseColor, baseLum);
+			document.getElementById("filterArea").style.background = ColorLuminance(baseColor, baseLum);
+			document.getElementById("filterAreaBG").style.background = ColorLuminance(baseColor, baseLum);
+			document.getElementById("featureAreaBG").style.background = baseColor;
+			document.getElementById("featureArea").style.background = baseColor;
 
 			var filterButtonIcon = document.getElementsByClassName("dig-filters__filter__link__circle");
 			 _.each(filterButtonIcon, function(item) {

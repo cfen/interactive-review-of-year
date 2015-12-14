@@ -1,10 +1,13 @@
 
 
 function formatGuardianDate(){
-	n = 1;
+	if(!window.guardian){
+        return "   ";
+    }
 	if(window.guardian){
 		n = window.guardian.config.page.webPublicationDate;
 	}
+
 
     var n = new Date(n); 
     

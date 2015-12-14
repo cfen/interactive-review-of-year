@@ -30,9 +30,10 @@ $day-spacing: 20px;
     }
 
     .dig-slice--filters & {
-        background-color: #94bfdd;
-        @include mq(mobileLandscape) {
-            padding-bottom: 5px;
+        background-color: #FFF; 
+        padding-bottom: 12px;
+        @include mq(tablet) {
+           padding-bottom: 36px;
         }
     }
 }
@@ -298,18 +299,19 @@ $day-spacing: 20px;
 }
 
 .dig-section-title a{
-    color: #FFF;
-    opacity: 0.8;
+    color: #fdadba;
+    opacity: 0.9;
     transition: opacity 0.1s ease-out;
 
     &,
     &:hover,
     &:active {
-        color: white;
+        color: #fdadba;
     }
 
     &:hover {
         opacity: 1;
+        text-decoration:underline;
     }
 }
 
